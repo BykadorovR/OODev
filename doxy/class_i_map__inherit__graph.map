@@ -1,0 +1,5 @@
+<map id="IMap" name="IMap">
+<area shape="rect" id="node2" href="$class_map.html" title="simple map class " alt="" coords="15,160,129,311"/>
+<area shape="rect" id="node3" href="$class_shared_map.html" title="shared map class each method calls base class and then modifies DB records depending on call result ..." alt="" coords="5,359,139,524"/>
+<area shape="rect" id="node4" href="$class_model.html" title="{Model\n||+ Model()\l+ ~Model()\l+ accept()\l+ add_path()\l+ remove_path()\l+ get_paths()\l}" alt="" coords="15,572,129,723"/>
+</map>

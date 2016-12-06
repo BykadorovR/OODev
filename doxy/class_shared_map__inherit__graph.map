@@ -1,0 +1,6 @@
+<map id="SharedMap" name="SharedMap">
+<area shape="rect" id="node5" href="$class_model.html" title="{Model\n||+ Model()\l+ ~Model()\l+ accept()\l+ add_path()\l+ remove_path()\l+ get_paths()\l}" alt="" coords="68,572,183,723"/>
+<area shape="rect" id="node2" href="$class_map.html" title="simple map class " alt="" coords="68,160,183,311"/>
+<area shape="rect" id="node3" href="$class_i_map.html" title="Map interface. " alt="" coords="5,5,120,112"/>
+<area shape="rect" id="node4" href="$class_i_drawable.html" title="interface for all drawable objects " alt="" coords="145,20,231,97"/>
+</map>

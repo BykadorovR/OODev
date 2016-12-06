@@ -1,0 +1,6 @@
+<map id="IDrawable" name="IDrawable">
+<area shape="rect" id="node2" href="$classbezier__path.html" title="bezier path " alt="" coords="5,153,123,259"/>
+<area shape="rect" id="node3" href="$class_map.html" title="simple map class " alt="" coords="147,131,261,281"/>
+<area shape="rect" id="node4" href="$class_shared_map.html" title="shared map class each method calls base class and then modifies DB records depending on call result ..." alt="" coords="137,329,271,495"/>
+<area shape="rect" id="node5" href="$class_model.html" title="{Model\n||+ Model()\l+ ~Model()\l+ accept()\l+ add_path()\l+ remove_path()\l+ get_paths()\l}" alt="" coords="147,543,261,693"/>
+</map>

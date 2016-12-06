@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$class_i_presenter.html" title="Presenter interface. " alt="" coords="5,56,87,83"/>
+<area shape="rect" id="node2" href="$class_login_presenter.html" title="LoginPresenter" alt="" coords="138,5,247,32"/>
+<area shape="rect" id="node3" href="$class_main_presenter.html" title="MainPresenter" alt="" coords="139,56,246,83"/>
+<area shape="rect" id="node4" href="$class_queue_presenter.html" title="QueuePresenter" alt="" coords="135,107,251,133"/>
+</map>
