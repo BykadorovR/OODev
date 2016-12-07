@@ -1,0 +1,7 @@
+<map id="IView" name="IView">
+<area shape="rect" id="node2" href="$class_login_view.html" title="main view, window by itself " alt="" coords="5,145,115,267"/>
+<area shape="rect" id="node3" href="$class_main_view.html" title="main view, window by itself " alt="" coords="139,145,245,267"/>
+<area shape="rect" id="node4" href="$class_perspective_view.html" title="perspective part of main view, frame by itself " alt="" coords="270,145,415,267"/>
+<area shape="rect" id="node5" href="$class_projective_view.html" title="projective part of main view, frame by itself " alt="" coords="439,145,574,267"/>
+<area shape="rect" id="node6" href="$class_queue_view.html" title="main view, window by itself " alt="" coords="598,145,714,267"/>
+</map>

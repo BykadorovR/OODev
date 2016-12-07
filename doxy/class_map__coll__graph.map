@@ -1,0 +1,4 @@
+<map id="Map" name="Map">
+<area shape="rect" id="node2" href="$class_i_map.html" title="Map interface. " alt="" coords="5,5,120,112"/>
+<area shape="rect" id="node3" href="$class_i_drawable.html" title="interface for all drawable objects " alt="" coords="145,20,231,97"/>
+</map>

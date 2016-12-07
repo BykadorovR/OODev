@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$class_i_auth.html" title="Auth interface. " alt="" coords="151,5,203,32"/>
+<area shape="rect" id="node2" href="$class_auth.html" title="Auth" alt="" coords="289,19,338,45"/>
+<area shape="rect" id="node3" href="$class_model.html" title="Model" alt="" coords="405,107,463,133"/>
+<area shape="rect" id="node4" href="$class_i_drawable.html" title="interface for all drawable objects " alt="" coords="5,56,84,83"/>
+<area shape="rect" id="node5" href="$classbezier__path.html" title="bezier path " alt="" coords="132,56,221,83"/>
+<area shape="rect" id="node6" href="$class_map.html" title="simple map class " alt="" coords="153,107,200,133"/>
+<area shape="rect" id="node7" href="$class_shared_map.html" title="shared map class each method calls base class and then modifies DB records depending on call result ..." alt="" coords="269,81,357,108"/>
+<area shape="rect" id="node8" href="$class_i_map.html" title="Map interface. " alt="" coords="19,107,70,133"/>
+<area shape="rect" id="node9" href="$class_i_model.html" title="Model interface. " alt="" coords="283,132,343,159"/>
+<area shape="rect" id="node10" href="$class_i_queue.html" title="interface for queue with bezier paths " alt="" coords="145,183,208,209"/>
+<area shape="rect" id="node11" href="$class_queue.html" title="queue with bezier paths " alt="" coords="283,183,343,209"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="Model" name="Model">
+<area shape="rect" id="node2" href="$class_i_model.html" title="Model interface. " alt="" coords="5,403,87,480"/>
+<area shape="rect" id="node3" href="$class_shared_map.html" title="shared map class each method calls base class and then modifies DB records depending on call result ..." alt="" coords="111,359,245,524"/>
+<area shape="rect" id="node4" href="$class_map.html" title="simple map class " alt="" coords="121,160,235,311"/>
+<area shape="rect" id="node5" href="$class_i_map.html" title="Map interface. " alt="" coords="58,5,173,112"/>
+<area shape="rect" id="node6" href="$class_i_drawable.html" title="interface for all drawable objects " alt="" coords="197,20,284,97"/>
+<area shape="rect" id="node7" href="$class_auth.html" title="{Auth\n||+ Auth()\l+ ~Auth()\l+ permission()\l+ login()\l}" alt="" coords="269,381,375,502"/>
+<area shape="rect" id="node8" href="$class_i_auth.html" title="Auth interface. " alt="" coords="269,189,375,281"/>
+<area shape="rect" id="node9" href="$class_queue.html" title="queue with bezier paths " alt="" coords="399,366,498,517"/>
+<area shape="rect" id="node10" href="$class_i_queue.html" title="interface for queue with bezier paths " alt="" coords="399,167,498,303"/>
+</map>

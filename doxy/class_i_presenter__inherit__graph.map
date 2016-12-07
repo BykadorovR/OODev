@@ -1,0 +1,5 @@
+<map id="IPresenter" name="IPresenter">
+<area shape="rect" id="node2" href="$class_login_presenter.html" title="{LoginPresenter\n||+ QueuePresenter()\l+ ~QueuePresenter()\l+ reg()\l+ reg()\l+ reg()\l+ reg()\l+ buttion_login()\l}" alt="" coords="5,189,149,355"/>
+<area shape="rect" id="node3" href="$class_main_presenter.html" title="{MainPresenter\n||+ MainPresenter()\l+ ~MainPresenter()\l+ reg()\l+ reg()\l+ reg()\l+ reg()\l+ buttion1_click()\l+ buttion2_click()\l+ buttion3_click()\l}" alt="" coords="174,175,309,369"/>
+<area shape="rect" id="node4" href="$class_queue_presenter.html" title="{QueuePresenter\n||+ QueuePresenter()\l+ ~QueuePresenter()\l+ reg()\l+ reg()\l+ reg()\l+ reg()\l+ buttion_accept()\l+ buttion_reject()\l}" alt="" coords="333,182,477,362"/>
+</map>

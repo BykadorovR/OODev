@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$class_i_view.html" title="View interface. " alt="" coords="5,107,59,133"/>
+<area shape="rect" id="node2" href="$class_login_view.html" title="main view, window by itself " alt="" coords="125,5,206,32"/>
+<area shape="rect" id="node3" href="$class_main_view.html" title="main view, window by itself " alt="" coords="126,56,205,83"/>
+<area shape="rect" id="node4" href="$class_perspective_view.html" title="perspective part of main view, frame by itself " alt="" coords="107,107,224,133"/>
+<area shape="rect" id="node5" href="$class_projective_view.html" title="projective part of main view, frame by itself " alt="" coords="112,157,219,184"/>
+<area shape="rect" id="node6" href="$class_queue_view.html" title="main view, window by itself " alt="" coords="121,208,209,235"/>
+</map>
