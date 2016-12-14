@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.2)
 project(map_template)
 include_directories("map_template/include/")
 FILE(GLOB SRC map_template/src/*.c*)
