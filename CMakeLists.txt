@@ -1,11 +1,14 @@
 cmake_minimum_required(VERSION 3.2)
 project(map_template)
 include_directories("map_template/include/")
+include_directories("Eigen")
+include_directories("wxWidgets-3.1.0/include")
+link_directories("wxWidgets-3.1.0/lib/vc_lib")
 FILE(GLOB SRC map_template/src/*.c*)
 FILE(GLOB INCLUDE map_template/include/*.h)
-include_directories("Eigen")
+FILE(GLOB WXLIB wxWidgets-3.1.0/lib/vc_lib/*.lib)
 add_executable(${PROJECT_NAME} ${SRC} ${INCLUDE})
-target_link_libraries(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} ${WXLIB})
 ################################
 # GTest
 ################################
