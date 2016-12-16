@@ -1,4 +1,4 @@
 if not exist .\build mkdir .\build
 cd .\build
-cmake ..\
+cmake -G "Visual Studio 10 2010" ..\
 pause
