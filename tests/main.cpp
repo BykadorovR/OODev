@@ -1,5 +1,10 @@
 #include <gtest/gtest.h>
-
+#include "Geometry.h"
+#include "Auth.h"
+#include "Map.h"
+#include "Interfaces.h"
+#include "Model.h"
+#include "Queue.h"
 int main(int argc, char *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);

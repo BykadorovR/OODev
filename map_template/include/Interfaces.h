@@ -10,8 +10,6 @@ class IPresenter;
 class IModel;
 class IMap;
 class IAuth;
-class IDB;
-class IDrawable;
 
 ///@brief View interface
 class IView
