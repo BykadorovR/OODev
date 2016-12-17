@@ -61,7 +61,7 @@ public:
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id) = 0;
+	virtual bool remove_path(const int id) = 0;
 	
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
@@ -82,7 +82,7 @@ public:
 	
 	///@brief perform login
 	///@return true if succeed, false otherwise
-	virtual bool login();
+	virtual bool login() = 0;
 
 	
 	//!TODO add permission checks(can read, can write, etc)
@@ -98,19 +98,19 @@ public:
 	
 	///@brief accept path
 	///@param path pointer to bezier path
-	virtual void accept(const bezier_path* path) = 0;
+	virtual bool accept(const bezier_path* path) = 0;
 	
 	///@brief accept path
 	///@param path index of bezier path
-	virtual void accept(const int path) = 0;
+	virtual bool accept(const int path) = 0;
 	
 	///@brief reject path
 	///@param path pointer to bezier path
-	virtual void reject(const bezier_path* path) = 0;
+	virtual bool reject(const bezier_path* path) = 0;
 	
 	///@brief reject path
 	///@param path index of bezier path
-	virtual void reject(const int path) = 0;
+	virtual bool reject(const int path) = 0;
 };
 
 #endif

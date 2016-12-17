@@ -7,16 +7,23 @@
 class Auth : public IAuth
 {
 public:
-	Auth(const IDB* DB, std::string login, std::string password);
-	~Auth();
+	Auth(const IDB* DB, std::string login, std::string password) {
+
+	}
+	~Auth() {
+	};
 
 	///@brief ask permissions
 	///@return mangled permissions
-	virtual int permission() const;
+	virtual int permission() {
+		return -1;
+	};
 	
 	///@brief perform login
 	///@return true if succeed, false otherwise
-	virtual bool login();
+	virtual bool login() {
+		return true;
+	};
 private:
 	const IDB *m_DB;
 private:

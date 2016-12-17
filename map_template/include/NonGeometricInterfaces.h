@@ -5,8 +5,8 @@ class IDB
 {
 public:
 	//!TODO add fuctionality
-	virtual void connect() = 0;
-	virtual void request() = 0;
+	virtual bool connect() = 0;
+	virtual bool request() = 0;
 	//etc
 private:
 };

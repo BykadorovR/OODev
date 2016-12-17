@@ -26,7 +26,7 @@ public:
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id);
+	virtual bool remove_path(const int id);
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths

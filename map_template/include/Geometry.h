@@ -12,7 +12,9 @@ class bezier_line
 public:
 	bezier_line(const Vector2f dots[4])
 	{
-		;
+		for (int i = 0; i < 4; i++) {
+			this->dots[i] = dots[i];
+		}
 	}
 	const Vector2f* get() const
 	{
@@ -26,13 +28,23 @@ private:
 class bezier_path : public IDrawable
 {
 public:
-	~bezier_path();
+	~bezier_path() {
+
+	}
 	///@brief perform basic test
 	///@return true if path is valid
-	bool test();
+	bool test() {
+		return true;
+	}
+
+	void setLines(std::vector<bezier_line*> lines) {
+		m_lines = lines;
+	}
 	///@brief draw function. contains GL functionality
-	virtual void drawGL();
-private:
+	virtual void drawGL() {
+
+	}
+
 	int depth;
 	std::vector<bezier_line*> m_lines;
 	std::string m_comment;

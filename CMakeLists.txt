@@ -3,7 +3,7 @@ include_directories("map_template/include/")
 FILE(GLOB SRC map_template/src/*.c*)
 FILE(GLOB INCLUDE map_template/include/*.h)
 include_directories("Eigen")
-add_executable(${PROJECT_NAME} ${SRC} ${INCLUDE})
+add_executable(${PROJECT_NAME} ${SRC} map_template/main.cpp ${INCLUDE})
 target_link_libraries(${PROJECT_NAME})
 ################################
 # GTest
@@ -14,6 +14,6 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 ################################
 FILE(GLOB SRC_test tests/*.c*)
 SET(CMAKE_CXX_FLAGS_DEBUG "/MTd")
-add_executable(${PROJECT_NAME}_test ${SRC_test} ${INCLUDE})
+add_executable(${PROJECT_NAME}_test ${SRC_test}  ${SRC} ${INCLUDE})
 target_link_libraries(${PROJECT_NAME}_test gtest gtest_main)
 add_test( ${PROJECT_NAME}_test ${PROJECT_NAME}_test )
