@@ -6,13 +6,18 @@
 #include <string>
 #include "Interfaces.h"
 
-
 ///@brief bezier line 
 class bezier_line
 {
 public:
-	bezier_line(const Vector2f dots[4]);
-	const Vector2f dots[4] get() const;
+	bezier_line(const Vector2f dots[4])
+	{
+		;
+	}
+	const Vector2f* get() const
+	{
+		return dots;
+	}
 private:
 	Vector2f dots[4];
 };
@@ -26,7 +31,7 @@ public:
 	///@return true if path is valid
 	bool test();
 	///@brief draw function. contains GL functionality
-	virtual void drawGL() = 0;
+	virtual void drawGL();
 private:
 	int depth;
 	std::vector<bezier_line*> m_lines;

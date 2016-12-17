@@ -2,6 +2,7 @@
 #define MY_INTERFACE
 
 #include <vector>
+#include "NonGeometricInterfaces.h"
 #include "Geometry.h"
 
 class IView;
@@ -10,6 +11,7 @@ class IModel;
 class IMap;
 class IAuth;
 class IDB;
+class IDrawable;
 
 ///@brief View interface
 class IView
@@ -88,26 +90,6 @@ public:
 	//!TODO add permission checks(can read, can write, etc)
 };
 
-
-///@brief Data Base interface
-class IDB
-{
-public:
-	//!TODO add fuctionality
-	virtual void connect()=0;
-	virtual void request()=0;
-	//etc
-private:
-};
-
-///@brief interface for all drawable objects
-class IDrawable
-{
-public:
-	///@brief draw function. contains GL functionality
-	virtual void drawGL() = 0;
-};
-
 ///@brief interface for queue with bezier paths
 class IQueue
 {
@@ -118,19 +100,19 @@ public:
 	
 	///@brief accept path
 	///@param path pointer to bezier path
-	void accept(const bezier_path* path) = 0;
+	virtual void accept(const bezier_path* path) = 0;
 	
 	///@brief accept path
 	///@param path index of bezier path
-	void accept(const int path) = 0;
+	virtual void accept(const int path) = 0;
 	
 	///@brief reject path
 	///@param path pointer to bezier path
-	void reject(const bezier_path* path) = 0;
+	virtual void reject(const bezier_path* path) = 0;
 	
 	///@brief reject path
 	///@param path index of bezier path
-	void reject(const int path) = 0;
+	virtual void reject(const int path) = 0;
 };
 
 #endif
