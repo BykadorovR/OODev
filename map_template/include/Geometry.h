@@ -4,7 +4,7 @@
 #include <eigen>
 #include <vector>
 #include <string>
-#include "Interfaces.h"
+#include "NonGeometricInterfaces.h"
 
 ///@brief bezier line 
 class bezier_line

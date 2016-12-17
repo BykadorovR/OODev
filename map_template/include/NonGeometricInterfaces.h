@@ -1,4 +1,5 @@
 #ifndef NON_GEOMETRIC_INTERFACES
+#define NON_GEOMETRIC_INTERFACES
 
 ///@brief Data Base interface
 class IDB
