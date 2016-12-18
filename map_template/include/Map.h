@@ -10,7 +10,10 @@ public:
 	///@brief perfrorm reconnaissance
 	///@param x is the point of region that needs to be determinated
 	///@return corresponding region
-	int find_region(const Vector2f &x) const;
+	int find_region(const Vector2f &x) const
+	{
+		;
+	}
 private:
 };
 
@@ -18,19 +21,34 @@ private:
 class Map : public IMap, public IDrawable
 {
 public:
-	Map();
-	~Map();
+	Map()
+	{
+		;
+	}
+	~Map()
+	{
+		;
+	}
 	///@brief add new path
 	///@param path is bezier path
-	virtual void add_path(const bezier_path *path);
+	virtual void add_path(const bezier_path *path)
+	{
+		;
+	}
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id);
+	virtual void remove_path(const int id)
+	{
+		;
+	}
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const;
+	virtual const std::vector<const bezier_path*> &get_paths() const
+	{
+		return std::vector<const bezier_path*>();
+	}
 
 	
 	///@brief draw function. contains GL functionality
@@ -46,23 +64,41 @@ protected:
 class SharedMap : public ::Map
 {
 public:
-	SharedMap(const IDB *m_DB);
-	~SharedMap();
+	SharedMap(const IDB *m_DB)
+	{
+		;
+	}
+	~SharedMap()
+	{
+		;
+	}
 	///@brief add new path
 	///@param path bezier path
-	virtual void add_path(const bezier_path *path);
+	virtual void add_path(const bezier_path *path)
+	{
+		;
+	}
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id);
+	virtual void remove_path(const int id)
+	{
+		;
+	}
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const;
+	virtual const std::vector<const bezier_path*> &get_paths() const
+	{
+		return std::vector<const bezier_path*>();
+	}
 
 	///@brief get all local bezier paths
 	///@return const reference to vector of const local bezier paths
-	virtual const std::vector<const bezier_path*> &get_local_paths() const;
+	virtual const std::vector<const bezier_path*> &get_local_paths() const
+	{
+		return std::vector<const bezier_path*>();
+	}
 
 	///@brief draw function. contains GL functionality
 	virtual void drawGL() = 0;

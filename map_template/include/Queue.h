@@ -7,31 +7,52 @@
 class Queue : public IQueue
 {
 public:
-	Queue(const IDB *m_DB);
+	Queue(const IDB *m_DB)
+	{
+		;
+	}
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const;
+	virtual const std::vector<const bezier_path*> &get_paths() const
+	{
+		return std::vector<const bezier_path*>();
+	}
 	
 	///@brief accept path
 	///@param path pointer to bezier path
-	void accept(const bezier_path* path);
+	void accept(const bezier_path* path)
+	{
+		;
+	}
 	
 	///@brief accept path
 	///@param path index of bezier path
-	void accept(const int path);
+	void accept(const int path)
+	{
+		;
+	}
 	
 	///@brief reject path
 	///@param path pointer to bezier path
-	void reject(const bezier_path* path);
+	void reject(const bezier_path* path)
+	{
+		;
+	}
 	
 	///@brief reject path
 	///@param path index of bezier path
-	void reject(const int path);
+	void reject(const int path)
+	{
+		;
+	}
 private:
 	
 	///@brief request all path to be accepted/rejected
-	void request();
+	void request()
+	{
+		;
+	}
 	std::vector<const bezier_path*> m_paths;
 };
 

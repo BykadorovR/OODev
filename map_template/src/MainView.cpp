@@ -3,6 +3,7 @@
 #include <wx\frame.h>
 #include <wx\menu.h>
 #include "MainView.h"
+#include "events.h"
 
 MainView::MainView(const wxString& title, const wxPoint& pos, const wxSize& size)
 	: wxFrame(NULL, wxID_ANY, title, pos, size)

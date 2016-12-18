@@ -16,7 +16,6 @@ set(wxLibDebug
 	wxzlibd.lib
 	wxregexud.lib
 	wxexpatd.lib
-	
 )
 set(wxLibRelease
 	wxmsw31u_gl.lib
@@ -106,7 +105,15 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/build/include)
 link_directories(${wxWidgets_ROOT_DIR}/lib/vc_lib)
 add_executable(${PROJECT_NAME} ${SRC} ${INCLUDE})
 add_dependencies(${PROJECT_NAME} wxBuild)
-target_link_libraries(${PROJECT_NAME} ${CommonLibs} debug ${wxLibDebug} optimized ${wxLibRelease})
+target_link_libraries(${PROJECT_NAME} ${CommonLibs})
+foreach(lib ${wxLibDebug})
+	target_link_libraries(${PROJECT_NAME} debug ${lib} )
+endforeach()
+foreach(lib ${wxLibRelease})
+	target_link_libraries(${PROJECT_NAME} optimized ${lib})
+endforeach()
+
+target_link_libraries(${PROJECT_NAME} ${Libraries})
 
 
 if(WIN32)
@@ -127,7 +134,7 @@ enable_testing()
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 ################################
 FILE(GLOB SRC_test tests/*.c*)
-SET(CMAKE_CXX_FLAGS_DEBUG "/MDd")
+#SET(CMAKE_CXX_FLAGS_DEBUG "/MDd")
 add_executable(${PROJECT_NAME}_test ${SRC_test} ${INCLUDE})
 target_link_libraries(${PROJECT_NAME}_test gtest gtest_main)
 add_test( ${PROJECT_NAME}_test ${PROJECT_NAME}_test )

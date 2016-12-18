@@ -80,13 +80,13 @@ public:
 	
 	///@brief ask permissions
 	///@return mangled permissions
-	virtual int permission() = 0;
+	virtual int permission() const = 0;
 	
 	///@brief perform login
 	///@return true if succeed, false otherwise
-	virtual bool login();
+	virtual bool login(const std::string &login, const std::string &password) = 0;
 
-	
+	virtual const std::string &get_login() const = 0;
 	//!TODO add permission checks(can read, can write, etc)
 };
 
