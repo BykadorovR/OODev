@@ -1,4 +1,5 @@
 #include "QueueView.h"
+#include "App.h"
 
 QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
@@ -18,8 +19,7 @@ QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWi
 	m_button_reject = new wxButton(this, wxID_ANY, wxT("Reject"), wxDefaultPosition, wxDefaultSize, 0);
 	bSizer4->Add(m_button_reject, 0, wxALL, 5);
 
-
-	bSizer3->Add(bSizer4, 1, wxEXPAND, 5);
+	bSizer3->Add(bSizer4, 0, wxFIXED_MINSIZE, 5);
 
 	wxBoxSizer* bSizer5;
 	bSizer5 = new wxBoxSizer(wxVERTICAL);
@@ -31,9 +31,10 @@ QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWi
 
 	bSizer3->Add(bSizer5, 1, wxEXPAND, 5);
 
-
 	this->SetSizer(bSizer3);
 	this->Layout();
+
+	this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, handler);
 
 	this->Centre(wxBOTH);
 }

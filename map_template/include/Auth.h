@@ -43,6 +43,19 @@ public:
 	{
 		return m_login;
 	}
+
+	///@brief get user id
+	virtual short id() const
+	{
+		return 1;
+	}
+
+	///@brief id of the first path user can create and commit
+	virtual short allowed_path_id() const
+	{
+		return 0;
+	}
+
 private:
 	IDB *m_DB;
 private:

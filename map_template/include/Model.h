@@ -38,16 +38,16 @@ public:
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id)
+	virtual void remove_path(iterator it)
 	{
 		;
 	}
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const
+	virtual const container &get_paths() const
 	{
-		return std::vector<const bezier_path*>();
+		return SharedMap::get_paths();
 	}
 
 

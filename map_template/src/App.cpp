@@ -2,6 +2,7 @@
 #include "MainView.h"
 #include "LoginView.h"
 #include "QueueView.h"
+#include "MainView.h"
 
 
 const char *db_login = "login";
@@ -14,6 +15,7 @@ bool MyApp::OnInit()
 
 	m_pipeline.push(new LoginView(this, m_model));
 	m_pipeline.push(new QueueView(this, m_model));
+	m_pipeline.push(new MainView(this, m_model));
 	m_pipeline.front()->Show();
 
 	return true;
