@@ -3,8 +3,10 @@
 
 #if TESTING
 #define PRIVATE_TESTABLE public
+#define PROTECTED_TESTABLE public
 #else
 #define PRIVATE_TESTABLE private
+#define PROTECTED_TESTABLE protected
 #endif
 
 #include "Interfaces.h"
@@ -58,7 +60,7 @@ namespace newmeteo {
 			return true;
 		}
 
-	PRIVATE_TESTABLE:
+	PROTECTED_TESTABLE:
 
 		///@brief request all path to be accepted/rejected
 		void request()
