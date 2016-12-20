@@ -5,7 +5,6 @@
 #include <wx\frame.h>
 
 #include "Views.h"
-#include "Presenters.h"
 #include "Model.h"
 
 class LoginView : public wxFrame
