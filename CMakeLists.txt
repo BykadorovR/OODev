@@ -43,6 +43,23 @@ set(wxConfHeaders
 	setup.h
 )
 
+    find_path( MYSQL_INCLUDE_DIR
+        NAMES "mysql.h"
+        PATHS "$ENV{PROGRAMFILES}/MySQL/*/include"
+              "$ENV{PROGRAMFILES(x86)}/MySQL/*/include"
+              "$ENV{SYSTEMDRIVE}/MySQL/*/include" )
+
+    find_library( MYSQL_LIBRARY
+        NAMES "libmysql.lib"
+        PATHS "$ENV{PROGRAMFILES}/MySQL/*/lib"
+              "$ENV{PROGRAMFILES(x86)}/MySQL/*/lib"
+              "$ENV{SYSTEMDRIVE}/MySQL/*/lib" )
+
+    find_library( MYSQLCONN_LIBRARY
+        NAMES "mysqlcppconn.lib"
+        PATHS "$ENV{PROGRAMFILES}/MySQL/*/lib/opt"
+              "$ENV{PROGRAMFILES(x86)}/MySQL/*/lib/opt"
+              "$ENV{SYSTEMDRIVE}/MySQL/*/lib/opt" )
 
 add_custom_command(
 	OUTPUT ${wxBuildDependecy}
@@ -101,11 +118,14 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/map_template/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Eigen)
 include_directories(${wxWidgets_ROOT_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/build/include)
+include_directories(${MYSQL_INCLUDE_DIR})
 
 link_directories(${wxWidgets_ROOT_DIR}/lib/vc_lib)
 add_executable(${PROJECT_NAME} ${SRC} ${INCLUDE})
 add_dependencies(${PROJECT_NAME} wxBuild)
 target_link_libraries(${PROJECT_NAME} ${CommonLibs})
+target_link_libraries(${PROJECT_NAME} ${MYSQL_LIBRARY})
+target_link_libraries(${PROJECT_NAME} ${MYSQLCONN_LIBRARY})
 foreach(lib ${wxLibDebug})
 	target_link_libraries(${PROJECT_NAME} debug ${lib} )
 endforeach()
