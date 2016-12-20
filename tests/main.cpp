@@ -8,26 +8,28 @@
 
 using namespace newmeteo;
 
+
 std::vector<bezier_line *> fill_path(int count, int x, int y) {
 	std::vector<bezier_line *> lines;
 	for (int i = 0; i < count; i++) {
-		Vector2f* dots[4];
+		Vector2f* dots;
+		dots = new Vector2f[4];
 		for (int j = 0; j < 4; j++) {
-			dots[j] = new Vector2f(x, y);
+			dots[j] = Vector2f(x, y);
 		}
-		lines.push_back(new bezier_line(*dots));
+		lines.push_back(new bezier_line(dots));
 	}
 	return lines;
 }
 
 
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
 	::testing::InitGoogleTest(&argc, argv);
 	return RUN_ALL_TESTS();
 	std::getchar(); // keep console window open until Return keystroke
 }
-/*
+*/
 TEST(AUTH, login_valid) {
 	IDB* db; //Create valid DB object when it will be added
 	Auth* auth = new Auth(db);
@@ -57,8 +59,7 @@ TEST(AUTH, perm_no_valid) {
 }
 
 TEST(BIZIER, valid_path) {
-	bezier_path* path;
-	fill_path(path, 5, 0,0);
+	bezier_path* path = new bezier_path(fill_path(5, 0, 0));
 	ASSERT_TRUE(path->test());
 }
 
@@ -80,12 +81,9 @@ TEST(DATABASE, request) {
 
 TEST(MAP, get) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0,0);
-	fill_path(path1, 3, 1,1);
-	fill_path(path2, 3, 2,2);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -95,12 +93,9 @@ TEST(MAP, get) {
 
 TEST(MAP, size) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0,0);
-	fill_path(path1, 3,2,2);
-	fill_path(path2, 3,1,1);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -111,12 +106,10 @@ TEST(MAP, size) {
 
 TEST(MAP, correctness_after_delete) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0, 0);
-	fill_path(path1, 3, 1, 1);
-	fill_path(path2, 3, 2,2);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
+
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -134,12 +127,10 @@ TEST(MAP, correctness_after_delete) {
 
 TEST(MAP, wrong_remove_negative) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0, 0);
-	fill_path(path1, 3, 1, 1);
-	fill_path(path2, 3, 2, 2);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
+
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -148,12 +139,10 @@ TEST(MAP, wrong_remove_negative) {
 
 TEST(MAP, wrong_remove_overflow) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0, 0);
-	fill_path(path1, 3, 1, 1);
-	fill_path(path2, 3, 2, 2);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
+
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -162,12 +151,10 @@ TEST(MAP, wrong_remove_overflow) {
 
 TEST(MAP, right_remove) {
 	newmeteo::Map* map = new newmeteo::Map();
-	bezier_path* path;
-	bezier_path* path1;
-	bezier_path* path2;
-	fill_path(path, 3, 0, 0);
-	fill_path(path1, 3, 1, 1);
-	fill_path(path2, 3, 2, 2);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+	bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
+
 	map->add_path(path);
 	map->add_path(path1);
 	map->add_path(path2);
@@ -182,12 +169,10 @@ protected:
 	{
 		accepted = new Queue((IDB*)db);
 		rejected = new Queue((IDB*)db);
-		bezier_path* path;
-		bezier_path* path1;
-		bezier_path* path2;
-		fill_path(path, 3, 0, 0);
-		fill_path(path1, 3, 1, 1);
-		fill_path(path2, 3, 2, 2);
+		bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+		bezier_path* path1 = new bezier_path(fill_path(3, 1, 1));
+		bezier_path* path2 = new bezier_path(fill_path(3, 2, 2));
+
 		accepted->m_added_paths.push_back(path);
 		accepted->m_added_paths.push_back(path1);
 		accepted->m_added_paths.push_back(path2);
@@ -209,7 +194,7 @@ TEST_F(TestQueue, accept_id) {
 	int index = 0;
 	for (auto it = test_path.begin(); it != test_path.end(); it++) {
 		if (index == 0) {			
-			ASSERT_EQ((*it)->get_lines[0]->get()[0](1, 0), 1);
+			ASSERT_EQ((*it)->get_lines()[0]->get()[0](1, 0), 1);
 		}
 		index++;
 	}
@@ -226,7 +211,7 @@ TEST_F(TestQueue, reject_id) {
 	int index = 0;
 	for (auto it = test_path.begin(); it != test_path.end(); it++) {
 		if (index == 0) {
-			ASSERT_EQ((*it)->get_lines[0]->get()[0](1, 0), 1);
+			ASSERT_EQ((*it)->get_lines()[0]->get()[0](1, 0), 1);
 		}
 		index++;
 	}
@@ -257,8 +242,7 @@ TEST(Queue, reject_real_by_id_if_exist) {
 		ASSERT_EQ(size_before - 1, qu->get_added_paths().size());
 	}
 }
-*/
-/*
+
 TEST(Reconnaissance, find_region_valid) {
 	//Висит
 	Reconnaissance* rec = new Reconnaissance();
@@ -272,16 +256,19 @@ TEST(Reconnaissance, find_region_valid) {
 	ASSERT_EQ(1, regions.size());
 	ASSERT_EQ(2147483648, regions[0]);
 }
-*/
+
 TEST(Reconnaissance, find_path_invalid) {
 	//Висит
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_path* path = new bezier_path(fill_path(3, 0, 1));
 	auto lines = path->get_lines();
 	std::vector<unsigned int> regions;
-	EXPECT_THAT(rec->find_region(path, regions), HasSubstr(""));
+	rec->find_region(path, regions);
+	std::cout << regions.size() << std::endl;
+	//Проверить, что регион корректный
+	//EXPECT_THAT(rec->find_region(path, regions), HasSubstr(""));
 }
-/*
+
 TEST(Reconnaissance, find_region_empty) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_line* line = NULL;
@@ -289,7 +276,6 @@ TEST(Reconnaissance, find_region_empty) {
 	rec->find_region(line, regions);
 	ASSERT_EQ(0, regions.size());
 }
-*/
 /*
 TEST(SharedMap, server_add_path) {
 	DB* db = new DB();
