@@ -1,6 +1,8 @@
 #include "LoginView.h"
 #include "App.h"
 
+using namespace newmeteo;
+
 LoginView::LoginView(wxEvtHandler *handler, IAuth *auth, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
 	m_auth = auth;

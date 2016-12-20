@@ -5,59 +5,59 @@
 #include "Map.h"
 #include "Auth.h"
 #include "Queue.h"
-
-class Model : public IModel, public SharedMap, public Auth, private Queue
-{
-public:
-	///@brief constructor
-	/// should create connection to DB, initialize Shared map and Auth
-	/// check login and password
-	Model(IDB *DB) : SharedMap(DB), Auth(DB), Queue(DB)
+namespace newmeteo {
+	class Model : public IModel, public SharedMap, public Auth, private Queue
 	{
-		;
-	}
+	public:
+		///@brief constructor
+		/// should create connection to DB, initialize Shared map and Auth
+		/// check login and password
+		Model(IDB *DB) : SharedMap(DB), Auth(DB), Queue(DB)
+		{
+			;
+		}
 
-	virtual ~Model()
-	{
-		;
-	}
+		virtual ~Model()
+		{
+			;
+		}
 
-	///@brief accept given presenter
-	///@param presenter Presenter to be accepted
-	virtual void accept(IPresenter* presenter)
-	{
-		;
-	}
+		///@brief accept given presenter
+		///@param presenter Presenter to be accepted
+		virtual void accept(IPresenter* presenter)
+		{
+			;
+		}
 
-	///@brief add new path
-	///@param path is bezier path
-	virtual void add_path(const bezier_path *path)
-	{
-		;
-	}
+		///@brief add new path
+		///@param path is bezier path
+		virtual void add_path(const bezier_path *path)
+		{
+			;
+		}
 
-	///@brief remove path
-	///@param id of the bezier path
-	virtual void remove_path(iterator it)
-	{
-		;
-	}
+		///@brief remove path
+		///@param id of the bezier path
+		virtual void remove_path(iterator it)
+		{
+			;
+		}
 
-	///@brief get all bezier paths
-	///@return const reference to vector of const bezier paths
-	virtual const container &get_paths() const
-	{
-		return SharedMap::get_paths();
-	}
-
-
-	virtual void drawGL()
-	{
-		;
-	}
-
-private:
-};
+		///@brief get all bezier paths
+		///@return const reference to vector of const bezier paths
+		virtual const container &get_paths() const
+		{
+			return SharedMap::get_paths();
+		}
 
 
+		virtual void drawGL()
+		{
+			;
+		}
+
+	private:
+	};
+
+}
 #endif

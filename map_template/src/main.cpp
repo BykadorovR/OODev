@@ -3,6 +3,6 @@
 
 #include "App.h"
 
-
+using namespace newmeteo;
 
 wxIMPLEMENT_APP(MyApp);

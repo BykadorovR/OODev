@@ -1,6 +1,8 @@
 #include "MainView.h"
 #include "App.h"
 
+using namespace newmeteo;
+
 MainView::MainView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
 	m_presenter = new MainPresenter(model, this);
