@@ -42,7 +42,7 @@ namespace newmeteo {
 			;
 		}
 		virtual bool accept(int index) {
-
+			return true;
 		}
 		///@brief reject path
 		///@param path pointer to bezier path
@@ -55,7 +55,7 @@ namespace newmeteo {
 		}
 
 		virtual bool reject(int index) {
-
+			return true;
 		}
 
 	PRIVATE_TESTABLE:

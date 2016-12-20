@@ -5,6 +5,12 @@
 #include <stack>
 #include "Interfaces.h"
 
+#if TESTING
+#define PRIVATE_TESTABLE public
+#else
+#define PRIVATE_TESTABLE private
+#endif
+
 namespace newmeteo {
 	class Reconnaissance
 	{
@@ -14,6 +20,7 @@ namespace newmeteo {
 		///@return corresponding region
 		void find_region(const bezier_line *x, std::vector<unsigned int> &out) const
 		{
+			if (x == NULL) return;
 			const Vector2f *points = x->get();
 			Vector2i blocks[4];
 
@@ -62,6 +69,7 @@ namespace newmeteo {
 
 		void find_region(const bezier_path *x, std::vector<unsigned int> &out) const
 		{
+			if (x == NULL) return;
 			const std::vector<bezier_line*> &lines = x->get_lines();
 			out.clear();
 			for (unsigned int i = 0; i < lines.size(); ++i)
@@ -72,7 +80,7 @@ namespace newmeteo {
 			out.erase(it, out.end());
 		}
 
-	private:
+	PRIVATE_TESTABLE:
 
 		// is point inside triangle [x1,x2,x3]
 		bool is_inside(const Vector2f &point, const Vector2f &x1, const Vector2f &x2, const Vector2f &x3) const
