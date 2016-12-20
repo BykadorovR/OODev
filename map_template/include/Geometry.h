@@ -43,7 +43,7 @@ namespace newmeteo {
 		///@return true if path is valid
 		bool test()
 		{
-			;
+			return true;
 		}
 		///@brief draw function. contains GL functionality
 		virtual void drawGL()

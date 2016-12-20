@@ -69,7 +69,7 @@ namespace newmeteo {
 		///@param id of the bezier path
 		virtual void remove_path(iterator &it) = 0;
 
-		virtual void remove_path(int index) = 0;
+		virtual bool remove_path(int index) = 0;
 
 		///@brief get all bezier paths
 		///@return const reference to vector of const bezier paths
@@ -117,10 +117,12 @@ namespace newmeteo {
 		///@brief accept path
 		///@param path pointer to bezier path
 		virtual void accept(const IMap::iterator &path) = 0;
+		virtual bool accept(int index) = 0;
 
 		///@brief reject path
 		///@param path pointer to bezier path
 		virtual void reject(const IMap::iterator &path) = 0;
+		virtual bool reject(int index) = 0;
 	};
 }
 #endif

@@ -169,8 +169,10 @@ namespace newmeteo {
 			m_paths.erase(it);
 		}
 
-		virtual void remove_path(int index)
+		virtual bool remove_path(int index)
 		{
+			if (index < 0 || index >= m_paths.size())
+				return false;
 			int l_index = 0;
 			for (iterator it = m_paths.begin(); it != m_paths.end(); ++it) {
 				if (l_index == index) {
@@ -179,6 +181,7 @@ namespace newmeteo {
 				}
 				l_index++;
 			}
+			return true;
 		}
 
 
@@ -247,9 +250,10 @@ namespace newmeteo {
 			Map::remove_path(it);
 		}
 
-		virtual void remove_path(int index)
+		virtual bool remove_path(int index)
 		{
 			Map::remove_path(index);
+			return true;
 		}
 
 		///@brief get all bezier paths

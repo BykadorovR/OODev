@@ -1,6 +1,12 @@
 #ifndef MY_QUEUE
 #define MY_QUEUE
 
+#if TESTING
+#define PRIVATE_TESTABLE public
+#else
+#define PRIVATE_TESTABLE private
+#endif
+
 #include "Interfaces.h"
 namespace newmeteo {
 	///@brief queue with bezier paths
@@ -35,7 +41,9 @@ namespace newmeteo {
 			//обозначаем элемент подтвержденным
 			;
 		}
+		virtual bool accept(int index) {
 
+		}
 		///@brief reject path
 		///@param path pointer to bezier path
 		virtual void reject(const IMap::iterator &path)
@@ -46,7 +54,11 @@ namespace newmeteo {
 			;
 		}
 
-	private:
+		virtual bool reject(int index) {
+
+		}
+
+	PRIVATE_TESTABLE:
 
 		///@brief request all path to be accepted/rejected
 		void request()
