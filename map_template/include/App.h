@@ -8,7 +8,7 @@
 #include <mysql.h>
 namespace newmeteo {
 
-    class MY_DB : public IDB
+ class MY_DB : public IDB
     {
         // IDB
         virtual bool request()
@@ -183,6 +183,6 @@ namespace newmeteo {
         Model *m_model;
         std::queue<wxFrame*> m_pipeline;
     };
-
+  
 }
 #endif

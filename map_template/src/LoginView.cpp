@@ -3,10 +3,10 @@
 
 using namespace newmeteo;
 
-LoginView::LoginView(wxEvtHandler *handler, IAuth *auth, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
+LoginView::LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
-	m_auth = auth;
-	m_presenter = new LoginPresenter(auth, this);
+	m_model = model;
+	m_presenter = new LoginPresenter(model, this);
 
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 

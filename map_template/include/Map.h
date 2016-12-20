@@ -5,15 +5,22 @@
 #include <stack>
 #include "Interfaces.h"
 
+#if TESTING
+#define PRIVATE_TESTABLE public
+#else
+#define PRIVATE_TESTABLE private
+#endif
+
 namespace newmeteo {
 	class Reconnaissance
 	{
 	public:
 		///@brief perfrorm reconnaissance
-		///@param x is the point of region that needs to be determinated
-		///@return corresponding region
+		///@param x is bezier line
+		///@param out corresponding regions
 		void find_region(const bezier_line *x, std::vector<unsigned int> &out) const
 		{
+			if (x == NULL) return;
 			const Vector2f *points = x->get();
 			Vector2i blocks[4];
 
@@ -28,40 +35,46 @@ namespace newmeteo {
 			maxf = this->max(minf, points[2]);
 			maxf = this->max(minf, points[3]);
 
-			minf = floor(minf);
-			maxf = floor(maxf);
+			minf = floor(minf / m_block_size);
+			maxf = floor(maxf / m_block_size);
 
+			if (minf == maxf)
+			{
+				out.push_back(get_id(minf.cast<int>()));
+				return;
+			}
 
 			for (Vector2f p = minf; p.x() <= maxf.x(); p += Vector2f(1.0f, 0.0f))
 			{
-				for (; p.y() <= maxf.y(); p += Vector2f(0.0f, 1.0f))
+				for (p.y() = minf.y(); p.y() <= maxf.y(); p += Vector2f(0.0f, 1.0f))
 				{
-					//line x0, x1
-					if (is_intersects(p, p + Vector2f(1.0f, 0.0f), points[0] / m_block_size, points[1] / m_block_size) ||
-						is_intersects(p, p + Vector2f(1.0f, 0.0f), points[1] / m_block_size, points[2] / m_block_size) ||
-						is_intersects(p, p + Vector2f(1.0f, 0.0f), points[0] / m_block_size, points[2] / m_block_size))
-					{
-						out.push_back(get_id(round(p).cast<int>()));
-						out.push_back(get_id(round(p + Vector2f(0.0f, -1.0f)).cast<int>()));
-					}
+					if (is_intersects(p, p + Vector2f(1.0f, 0.0f), points[0] / m_block_size,
+						points[1] / m_block_size, points[2] / m_block_size, points[3] / m_block_size, true, false) ||
 
-					if (is_intersects(p, p + Vector2f(0.0f, 1.0f), points[0] / m_block_size, points[1] / m_block_size) ||
-						is_intersects(p, p + Vector2f(0.0f, 1.0f), points[1] / m_block_size, points[2] / m_block_size) ||
-						is_intersects(p, p + Vector2f(0.0f, 1.0f), points[0] / m_block_size, points[2] / m_block_size))
-					{
-						out.push_back(get_id(round(p).cast<int>()));
-						out.push_back(get_id(round(p + Vector2f(-1.0f, 0.0f)).cast<int>()));
-					}
+						is_intersects(p, p + Vector2f(0.0f, 1.0f), points[0] / m_block_size,
+							points[1] / m_block_size, points[2] / m_block_size, points[3] / m_block_size, true, false) ||
 
-					if (is_inside(p, points[0] / m_block_size, points[1] / m_block_size, points[3] / m_block_size) ||
+						is_intersects(p + Vector2f(0.0f, 1.0f), p + Vector2f(1.0f, 1.0f), points[0] / m_block_size,
+							points[1] / m_block_size, points[2] / m_block_size, points[3] / m_block_size, false, false) ||
+
+						is_intersects(p + Vector2f(1.0f, 0.0f), p + Vector2f(1.0f, 1.0f), points[0] / m_block_size,
+							points[1] / m_block_size, points[2] / m_block_size, points[3] / m_block_size, false, false) ||
+
+						is_inside(p, points[0] / m_block_size, points[1] / m_block_size, points[3] / m_block_size) ||
+
 						is_inside(p, points[0] / m_block_size, points[2] / m_block_size, points[3] / m_block_size))
 						out.push_back(get_id(round(p).cast<int>()));
 				}
 			}
 		}
 
+
+		///@brief find regions for path x
+		///@param x is bezier path
+		///@param out is output regions
 		void find_region(const bezier_path *x, std::vector<unsigned int> &out) const
 		{
+			if (x == NULL) return;
 			const std::vector<bezier_line*> &lines = x->get_lines();
 			out.clear();
 			for (unsigned int i = 0; i < lines.size(); ++i)
@@ -72,7 +85,7 @@ namespace newmeteo {
 			out.erase(it, out.end());
 		}
 
-	private:
+	PRIVATE_TESTABLE:
 
 		// is point inside triangle [x1,x2,x3]
 		bool is_inside(const Vector2f &point, const Vector2f &x1, const Vector2f &x2, const Vector2f &x3) const
@@ -91,8 +104,8 @@ namespace newmeteo {
 
 			return true;
 		}
-		// is [x1,x2] intersects [x3,x4]
-		bool is_intersects(const Vector2f &x1, const Vector2f &x2, const Vector2f &x3, const Vector2f &x4) const
+		// is [x1,x2] intersects [x3,x4] include lef, include right
+		bool is_intersects(const Vector2f &x1, const Vector2f &x2, const Vector2f &x3, const Vector2f &x4, bool left, bool right) const
 		{
 			const float det = (x4.y() - x3.y())*(x2.x() - x1.x()) - (x4.x() - x3.x())*(x2.y() - x1.y());
 
@@ -103,10 +116,20 @@ namespace newmeteo {
 			a1 /= det;
 			a2 /= det;
 
-			if (a1 < 0.0f || a1 > 1.0f || a2 < 0.0f || a2 > 0.0f)
+			if ((left) && (a1 < 0.0f || a2 < 0.0f) || (!left) && (a1 <= 0.0f || a2 < 0.0f) ||
+				(right) && (a1 > 1.0f || a2 > 1.0f) || (!right) && (a1 >= 1.0f || a2 >= 1.0f))
 				return false;
 
 			return true;
+		}
+
+		//intersect [x1,x2] with [rec1,rec2] [rec2,rec4] [rec4,rec3] [rec3,rec1]
+		bool is_intersects(const Vector2f &x1, const Vector2f &x2, const Vector2f &rec1, const Vector2f &rec2, const Vector2f &rec3, const Vector2f &rec4, bool left, bool right) const
+		{
+			return (is_intersects(x1, x2, rec1, rec2, left, right) ||
+				is_intersects(x1, x2, rec2, rec4, left, right) ||
+				is_intersects(x1, x2, rec4, rec3, left, right) ||
+				is_intersects(x1, x2, rec3, rec1, left, right));
 		}
 
 		Vector2f min(const Vector2f &a, const Vector2f &b) const
@@ -133,9 +156,10 @@ namespace newmeteo {
 
 		unsigned int get_id(const Vector2i &block_coord) const
 		{
-			assert(block_coord[0] < SHRT_MIN || block_coord[1] > SHRT_MAX);
+			assert(!(block_coord[0] < SHRT_MIN || block_coord[0] > SHRT_MAX ||
+				block_coord[1] < SHRT_MIN || block_coord[1] > SHRT_MAX));
 
-			return block_coord[0] - SHRT_MIN + USHRT_MAX * block_coord[1];
+			return block_coord[0] - SHRT_MIN + USHRT_MAX * (block_coord[1] - SHRT_MIN);
 		}
 
 		const int m_block_size = 10;
@@ -169,6 +193,22 @@ namespace newmeteo {
 			m_paths.erase(it);
 		}
 
+		virtual bool remove_path(int index)
+		{
+			if (index < 0 || index >= m_paths.size())
+				return false;
+			int l_index = 0;
+			for (iterator it = m_paths.begin(); it != m_paths.end(); ++it) {
+				if (l_index == index) {
+					m_paths.erase(it);
+					break;
+				}
+				l_index++;
+			}
+			return true;
+		}
+
+
 		///@brief get all bezier paths
 		///@return const reference to vector of const bezier paths
 		virtual const container &get_paths() const
@@ -178,7 +218,8 @@ namespace newmeteo {
 
 
 		///@brief draw function. contains GL functionality
-		virtual void drawGL() = 0;
+		virtual void drawGL() {
+		};
 	protected:
 		container m_paths;
 	};
@@ -231,6 +272,12 @@ namespace newmeteo {
 			//удалить из локальной копии по ситуации исходя из вышесказанного (вызов метода ниже)
 
 			Map::remove_path(it);
+		}
+
+		virtual bool remove_path(int index)
+		{
+			Map::remove_path(index);
+			return true;
 		}
 
 		///@brief get all bezier paths

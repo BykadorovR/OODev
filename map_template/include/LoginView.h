@@ -12,7 +12,7 @@ namespace newmeteo {
 		friend class LoginPresenter;
 	private:
 		LoginPresenter *m_presenter;
-		IAuth *m_auth;
+		Model *m_model;
 	protected:
 		wxTextCtrl* m_text_login;
 		wxTextCtrl* m_text_password;
@@ -20,7 +20,7 @@ namespace newmeteo {
 
 	public:
 
-		LoginView(wxEvtHandler *handler, IAuth *model, wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(1020, 562), long style = wxCAPTION | wxTAB_TRAVERSAL);
+		LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(1020, 562), long style = wxCAPTION | wxTAB_TRAVERSAL);
 
 		~LoginView();
 
@@ -29,37 +29,16 @@ namespace newmeteo {
 	class LoginPresenter : public IPresenter, public wxEvtHandler
 	{
 	public:
-		LoginPresenter(IAuth *auth, LoginView *view) : m_view(view), m_auth(auth)
+		LoginPresenter(Model *model, LoginView *view) : m_view(view), m_model(model)
 		{
-			;
+			m_model->accept(this);
 		}
 		~LoginPresenter()
 		{
-			;
+			m_model->remove(this);
 		}
 
-
-		///@brief register given view
-		///@param view to be registered
-		virtual void reg(IView *view)
-		{
-			;
-		}
-		///@brief register given model
-		///@param model to be registered
-		virtual void reg(IModel *model)
-		{
-			;
-		}
-		///@brief register given map
-		///@param map to be registered
-		virtual void reg(IMap *map)
-		{
-			;
-		}
-		///@brief register given Auth module
-		///@param auth module to be registered
-		virtual void reg(IAuth *auth)
+		virtual void data_was_updated()
 		{
 			;
 		}
@@ -68,14 +47,14 @@ namespace newmeteo {
 		{
 			std::string login = m_view->m_text_login->GetValue();
 			std::string password = m_view->m_text_password->GetValue();
-			if (m_auth->login(login, password))
-				wxMessageBox(wxString(wxT("Welcome ")) + m_auth->get_login(), wxT("Welcome"), wxICON_INFORMATION);
+			if (m_model->login(login, password))
+				wxMessageBox(wxString(wxT("Welcome ")) + m_model->get_login(), wxT("Welcome"), wxICON_INFORMATION);
 			m_view->Close();
 		}
 
 	private:
 		LoginView *m_view;
-		IAuth *m_auth;
+		Model *m_model;
 	};
 }
 #endif
