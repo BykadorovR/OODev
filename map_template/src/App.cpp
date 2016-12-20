@@ -12,6 +12,8 @@ const char *db_pass = "password";
 bool MyApp::OnInit()
 {
 	m_DB = new MY_DB();
+    if (!m_DB->connect())
+        return false;
 	m_model = new Model(m_DB);
 
 	m_pipeline.push(new LoginView(this, m_model));
