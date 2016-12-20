@@ -26,6 +26,10 @@ private:
 class bezier_path : public IDrawable
 {
 public:
+	bezier_path(const std::vector<bezier_line*> &lines) : m_lines(lines)
+	{
+		;
+	}
 	~bezier_path()
 	{
 		for (unsigned int i = 0; i < m_lines.size(); ++i)
@@ -42,6 +46,11 @@ public:
 	{
 		;
 	}
+	const std::vector<bezier_line*> &get_lines() const
+	{
+		return m_lines;
+	}
+
 private:
 	int depth;
 	std::vector<bezier_line*> m_lines;
