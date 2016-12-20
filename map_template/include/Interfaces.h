@@ -18,10 +18,6 @@ namespace newmeteo {
 	class IView
 	{
 	public:
-		///@brief accept given presenter
-		///@param presenter to be accepted
-		virtual void accept(IPresenter *presenter) = 0;
-
 		///@brief redraw all
 		virtual void redraw() = 0;
 	};
@@ -30,18 +26,7 @@ namespace newmeteo {
 	class IPresenter
 	{
 	public:
-		///@brief register given view
-		///@param view to be registered
-		virtual void reg(IView *view) = 0;
-		///@brief register given model
-		///@param model to be registered
-		virtual void reg(IModel *model) = 0;
-		///@brief register given map
-		///@param map to be registered
-		virtual void reg(IMap *map) = 0;
-		///@brief register given Auth module
-		///@param auth module to be registered
-		virtual void reg(IAuth *auth) = 0;
+		virtual void data_was_updated() = 0;
 	};
 
 	///@brief Model interface
@@ -51,6 +36,10 @@ namespace newmeteo {
 		///@brief accept given presenter
 		///@param presenter to be accepted
 		virtual void accept(IPresenter *presenter) = 0;
+
+		virtual void remove(IPresenter* presenter) = 0;
+
+		virtual void data_was_updated() = 0;
 	};
 
 
