@@ -59,7 +59,7 @@ namespace newmeteo {
 	{
 	public:
 		typedef std::list<const bezier_path*> container;
-		typedef std::list<const bezier_path*>::iterator iterator;
+		typedef std::list<const bezier_path*>::const_iterator iterator;
 
 		///@brief add new path
 		///@param path is bezier path
@@ -68,6 +68,8 @@ namespace newmeteo {
 		///@brief remove path
 		///@param id of the bezier path
 		virtual void remove_path(iterator &it) = 0;
+
+		virtual void remove_path(int index) = 0;
 
 		///@brief get all bezier paths
 		///@return const reference to vector of const bezier paths

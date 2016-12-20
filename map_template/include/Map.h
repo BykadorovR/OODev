@@ -169,6 +169,19 @@ namespace newmeteo {
 			m_paths.erase(it);
 		}
 
+		virtual void remove_path(int index)
+		{
+			int l_index = 0;
+			for (iterator it = m_paths.begin(); it != m_paths.end(); ++it) {
+				if (l_index == index) {
+					m_paths.erase(it);
+					break;
+				}
+				l_index++;
+			}
+		}
+
+
 		///@brief get all bezier paths
 		///@return const reference to vector of const bezier paths
 		virtual const container &get_paths() const
@@ -178,7 +191,8 @@ namespace newmeteo {
 
 
 		///@brief draw function. contains GL functionality
-		virtual void drawGL() = 0;
+		virtual void drawGL() {
+		};
 	protected:
 		container m_paths;
 	};
@@ -231,6 +245,11 @@ namespace newmeteo {
 			//удалить из локальной копии по ситуации исходя из вышесказанного (вызов метода ниже)
 
 			Map::remove_path(it);
+		}
+
+		virtual void remove_path(int index)
+		{
+			Map::remove_path(index);
 		}
 
 		///@brief get all bezier paths
