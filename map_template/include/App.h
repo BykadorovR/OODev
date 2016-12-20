@@ -24,8 +24,8 @@ public:
 
 	virtual ~MyApp()
 	{
-		delete m_DB;
 		delete m_model;
+		delete m_DB;
 	}
 	virtual bool OnInit();
 

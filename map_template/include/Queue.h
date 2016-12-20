@@ -46,7 +46,7 @@ public:
 		;
 	}
 
-private:
+protected:
 	
 	///@brief request all path to be accepted/rejected
 	void request()

@@ -30,35 +30,14 @@ class MainPresenter : public IPresenter, public wxEvtHandler
 public:
 	MainPresenter(Model *model, MainView *view) : m_view(view), m_model(model)
 	{
-		;
+		m_model->accept(this);
 	}
 	~MainPresenter()
 	{
-		;
+		m_model->remove(this);
 	}
 
-
-	///@brief register given view
-	///@param view to be registered
-	virtual void reg(IView *view)
-	{
-		;
-	}
-	///@brief register given model
-	///@param model to be registered
-	virtual void reg(IModel *model)
-	{
-		;
-	}
-	///@brief register given map
-	///@param map to be registered
-	virtual void reg(IMap *map)
-	{
-		;
-	}
-	///@brief register given Auth module
-	///@param auth module to be registered
-	virtual void reg(IAuth *auth)
+	virtual void data_was_updated()
 	{
 		;
 	}
