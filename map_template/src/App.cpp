@@ -4,6 +4,7 @@
 #include "QueueView.h"
 #include "MainView.h"
 
+using namespace newmeteo;
 
 const char *db_login = "login";
 const char *db_pass = "password";

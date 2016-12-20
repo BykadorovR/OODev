@@ -7,7 +7,7 @@
 #include <GL/glu.h>
 #include <GL/gl.h>
 
-
+using namespace newmeteo;
 
 //BEGIN_EVENT_TABLE(BasicGLPane, wxGLCanvas)
 //EVT_MOTION(BasicGLPane::mouseMoved)

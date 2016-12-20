@@ -5,36 +5,37 @@
 #include <wx\wx.h>
 #include "Model.h"
 
+namespace newmeteo {
 
-class MY_DB : public IDB
-{
-	virtual void connect()
+	class MY_DB : public IDB
 	{
-		;
-	}
-	virtual void request()
+		virtual void connect()
+		{
+			;
+		}
+		virtual void request()
+		{
+			;
+		}
+	};
+
+	class MyApp : public wxApp
 	{
-		;
-	}
-};
+	public:
 
-class MyApp : public wxApp
-{
-public:
+		virtual ~MyApp()
+		{
+			delete m_DB;
+			delete m_model;
+		}
+		virtual bool OnInit();
 
-	virtual ~MyApp()
-	{
-		delete m_model;
-		delete m_DB;
-	}
-	virtual bool OnInit();
+		void MyApp::CloseView(wxCloseEvent& event);
+	private:
+		IDB *m_DB;
+		Model *m_model;
+		std::queue<wxFrame*> m_pipeline;
+	};
 
-	void MyApp::CloseView(wxCloseEvent& event);
-private:
-	IDB *m_DB;
-	Model *m_model;
-	std::queue<wxFrame*> m_pipeline;
-};
-
-
+}
 #endif

@@ -1,6 +1,8 @@
 #include "QueueView.h"
 #include "App.h"
 
+using namespace newmeteo;
+
 QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
 
