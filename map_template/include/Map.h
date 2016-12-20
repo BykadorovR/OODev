@@ -11,17 +11,100 @@ public:
 	///@brief perfrorm reconnaissance
 	///@param x is the point of region that needs to be determinated
 	///@return corresponding region
-	std::vector<unsigned int> find_region(const bezier_line *x)
+	void find_region(const bezier_line *x, std::vector<unsigned int> &out) const
 	{
-		
+		const Vector2f *points = x->get();
+		Vector2i blocks[4];
+
+		for (int i = 0; i < 4; ++i)
+			blocks[i] = floor(points[i] / m_block_size).cast<int>();
+
+		Vector2f minf = this->min(points[0], points[1]);
+		minf = this->min(minf, points[2]);
+		minf = this->min(minf, points[3]);
+
+		Vector2f maxf = this->max(points[0], points[1]);
+		maxf = this->max(minf, points[2]);
+		maxf = this->max(minf, points[3]);
+
+		minf = floor(minf);
+		maxf = floor(maxf);
 
 
-		return std::vector<unsigned int>();
+		for (Vector2f p = minf; p.x() <= maxf.x(); p += Vector2f(1.0f, 0.0f))
+		{
+			for (; p.y() <= maxf.y(); p += Vector2f(0.0f, 1.0f))
+			{
+				//line x0, x1
+				if (is_intersects(p, p + Vector2f(1.0f, 0.0f), points[0] / m_block_size, points[1] / m_block_size) ||
+					is_intersects(p, p + Vector2f(1.0f, 0.0f), points[1] / m_block_size, points[2] / m_block_size) ||
+					is_intersects(p, p + Vector2f(1.0f, 0.0f), points[0] / m_block_size, points[2] / m_block_size))
+				{
+					out.push_back(get_id(round(p).cast<int>()));
+					out.push_back(get_id(round(p + Vector2f(0.0f, -1.0f)).cast<int>()));
+				}
+
+				if (is_intersects(p, p + Vector2f(0.0f, 1.0f), points[0] / m_block_size, points[1] / m_block_size) ||
+					is_intersects(p, p + Vector2f(0.0f, 1.0f), points[1] / m_block_size, points[2] / m_block_size) ||
+					is_intersects(p, p + Vector2f(0.0f, 1.0f), points[0] / m_block_size, points[2] / m_block_size))
+				{
+					out.push_back(get_id(round(p).cast<int>()));
+					out.push_back(get_id(round(p + Vector2f(-1.0f, 0.0f)).cast<int>()));
+				}
+
+				if (is_inside(p, points[0] / m_block_size, points[1] / m_block_size, points[3] / m_block_size) ||
+					is_inside(p, points[0] / m_block_size, points[2] / m_block_size, points[3] / m_block_size))
+					out.push_back(get_id(round(p).cast<int>()));
+			}
+		}
 	}
+
+	void find_region(const bezier_path *x, std::vector<unsigned int> &out) const 
+	{
+		const std::vector<bezier_line*> &lines = x->get_lines();
+		out.clear();
+		for (unsigned int i = 0; i < lines.size(); ++i)
+			find_region(lines[i], out);
+		
+		std::sort(out.begin(), out.end());
+		std::vector<unsigned int>::iterator it = std::unique(out.begin(), out.end());
+		out.erase(it, out.end());
+	}
+
 private:
 
-	bool is_inside(const float det, const Vector2f &point, const Vector2f &x, const Vector2f &y, const Vector2f &z) const
+	// is point inside triangle [x1,x2,x3]
+	bool is_inside(const Vector2f &point, const Vector2f &x1, const Vector2f &x2, const Vector2f &x3) const
 	{
+		const float det = (x2.y() - x3.y())*(x1.x() - x3.x()) + (x3.x() - x2.x())*(x1.y() - x3.y());
+		if (abs(det) < m_det_epsilon)
+			return false;
+		float a = (x2.y() - x3.y())*(point.x() - x3.x()) + (x3.x() - x2.x())*(point.y() - x3.y());
+		float b = (x3.y() - x1.y())*(point.x() - x3.x()) + (x1.x() - x3.x())*(point.y() - x3.y());
+		a /= det;
+		b /= det;
+		float c = 1.0f - a - b;
+
+		if (a < 0.0f || b < 0.0f || c < 0.0f)
+			return false;
+
+		return true;
+	}
+	// is [x1,x2] intersects [x3,x4]
+	bool is_intersects(const Vector2f &x1, const Vector2f &x2, const Vector2f &x3, const Vector2f &x4) const
+	{
+		const float det = (x4.y() - x3.y())*(x2.x() - x1.x()) - (x4.x() - x3.x())*(x2.y() - x1.y());
+
+		if (abs(det) < m_det_epsilon)
+			return false;
+		float a1 = (x4.x() - x3.x())*(x1.y() - x3.y()) - (x4.y() - x3.y())*(x1.x() - x3.x());
+		float a2 = (x2.x() - x1.x())*(x1.y() - x3.y()) - (x2.y() - x1.y())*(x1.x() - x3.x());
+		a1 /= det;
+		a2 /= det;
+
+		if (a1 < 0.0f || a1 > 1.0f || a2 < 0.0f || a2 > 0.0f)
+			return false;
+
 		return true;
 	}
 
@@ -37,16 +120,25 @@ private:
 			a[1] > b[1] ? a[1] : b[1]);
 	}
 
-
-	unsigned int get_id(const Vector2i &coord) const
+	Vector2f floor(const Vector2f &a) const
 	{
-		assert(coord[0] < SHRT_MIN || coord[1] > SHRT_MAX);
+		return Vector2f(::floor(a[0]),::floor(a[1]));
+	}
 
-		return coord[0] / m_block_size - SHRT_MIN + USHRT_MAX * coord[1] / m_block_size;
+	Vector2f round(const Vector2f &a) const
+	{
+		return Vector2f(::round(a[0]), ::round(a[1]));
+	}
+
+	unsigned int get_id(const Vector2i &block_coord) const
+	{
+		assert(block_coord[0] < SHRT_MIN || block_coord[1] > SHRT_MAX);
+
+		return block_coord[0] - SHRT_MIN + USHRT_MAX * block_coord[1];
 	}
 
 	const int m_block_size = 10;
-	std::vector<bool> m_mask;
+	const float m_det_epsilon = 1e-10f;
 };
 
 ///@brief simple map class
