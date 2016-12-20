@@ -6,7 +6,6 @@
 #include <wx\stattext.h>
 
 #include "Views.h"
-#include "Presenters.h"
 #include "Model.h"
 #include "GLCanvas.h"
 

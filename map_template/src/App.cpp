@@ -18,14 +18,6 @@ bool MyApp::OnInit()
 	m_pipeline.push(new MainView(this, m_model));
 	m_pipeline.front()->Show();
 
-	Reconnaissance rec;
-	Vector2f dots[] = { Vector2f(0.0f, 0.0f), Vector2f(1.5f, 2.5f), Vector2f(2.5f, 0.5f), Vector2f(3.0f, 4.0f) };
-	bezier_line *line = new bezier_line(dots);
-	std::vector<bezier_line*> lines; lines.push_back(line);
-	bezier_path path(lines);
-	std::vector<unsigned int> out;
-	rec.find_region(&path, out);
-
 	return true;
 }
 

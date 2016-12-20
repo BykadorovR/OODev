@@ -10,16 +10,20 @@
 class bezier_line
 {
 public:
-	bezier_line(const Vector2f dots[4])
+	bezier_line(Vector2f * const dots)
 	{
-		;
+		m_dots = dots;
+	}
+	~bezier_line()
+	{
+		delete[] m_dots;
 	}
 	const Vector2f* get() const
 	{
-		return dots;
+		return m_dots;
 	}
 private:
-	Vector2f dots[4];
+	Vector2f *m_dots;
 };
 
 ///@brief bezier path
