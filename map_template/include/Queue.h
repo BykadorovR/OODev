@@ -7,32 +7,54 @@
 class Queue : public IQueue
 {
 public:
-	Queue(const IDB *m_DB);
+	Queue(const IDB *m_DB)
+	{
+		;
+	}
 
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const;
+	virtual const IMap::container &get_added_paths() const
+	{
+		return m_added_paths;
+	}
 	
+	///@brief get all bezier paths
+	///@return const reference to vector of const bezier paths
+	virtual const IMap::container &get_removed_paths() const
+	{
+		return m_removed_paths;
+	}
+
 	///@brief accept path
 	///@param path pointer to bezier path
-	void accept(const bezier_path* path);
-	
-	///@brief accept path
-	///@param path index of bezier path
-	void accept(const int path);
-	
+	virtual void accept(const IMap::iterator &path)
+	{
+		//всего для элемента очереди должно быть три значения
+		//подтвержден, отклонен, еще не успели рассмотреть
+		//обозначаем элемент подтвержденным
+		;
+	}
+
 	///@brief reject path
 	///@param path pointer to bezier path
-	void reject(const bezier_path* path);
-	
-	///@brief reject path
-	///@param path index of bezier path
-	void reject(const int path);
+	virtual void reject(const IMap::iterator &path)
+	{
+		//определяем очередь. можно при помощи запроса, можно при помощи добавления методов принять отклонить для каждой очереди
+		//удаляем из очереди добавления, т.к. клиент отказал, а нужно согласие всех
+		//переносим из очереди удаления обратно на карту, т.к. клиент отказал, а нужно согласие всех
+		;
+	}
+
 private:
 	
 	///@brief request all path to be accepted/rejected
-	void request();
-	std::vector<const bezier_path*> m_paths;
+	void request()
+	{
+		;
+	}
+	IMap::container m_added_paths;
+	IMap::container m_removed_paths;
 };
 
 

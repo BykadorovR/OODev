@@ -26,12 +26,22 @@ private:
 class bezier_path : public IDrawable
 {
 public:
-	~bezier_path();
+	~bezier_path()
+	{
+		for (unsigned int i = 0; i < m_lines.size(); ++i)
+			delete m_lines[i];
+	}
 	///@brief perform basic test
 	///@return true if path is valid
-	bool test();
+	bool test()
+	{
+		;
+	}
 	///@brief draw function. contains GL functionality
-	virtual void drawGL();
+	virtual void drawGL()
+	{
+		;
+	}
 private:
 	int depth;
 	std::vector<bezier_line*> m_lines;

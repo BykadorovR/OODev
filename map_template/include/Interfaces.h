@@ -1,7 +1,7 @@
 #ifndef MY_INTERFACE
 #define MY_INTERFACE
 
-#include <vector>
+#include <list>
 #include "NonGeometricInterfaces.h"
 #include "Geometry.h"
 
@@ -57,17 +57,20 @@ public:
 class IMap
 {
 public:
+	typedef std::list<const bezier_path*> container;
+	typedef std::list<const bezier_path*>::iterator iterator;
+
 	///@brief add new path
 	///@param path is bezier path
 	virtual void add_path(const bezier_path *path) = 0;
 
 	///@brief remove path
 	///@param id of the bezier path
-	virtual void remove_path(const int id) = 0;
+	virtual void remove_path(iterator &it) = 0;
 	
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const = 0;
+	virtual const container &get_paths() const = 0;
 
 	// + some sort of iterator
 };
@@ -80,14 +83,20 @@ public:
 	
 	///@brief ask permissions
 	///@return mangled permissions
-	virtual int permission() = 0;
+	virtual int permission() const = 0;
 	
 	///@brief perform login
 	///@return true if succeed, false otherwise
-	virtual bool login();
+	virtual bool login(const std::string &login, const std::string &password) = 0;
 
-	
+	virtual const std::string &get_login() const = 0;
 	//!TODO add permission checks(can read, can write, etc)
+
+	///@brief get user id
+	virtual short id() const = 0;
+
+	///@brief id of the first path user can create and commit
+	virtual short allowed_path_id() const = 0;
 };
 
 ///@brief interface for queue with bezier paths
@@ -96,23 +105,19 @@ class IQueue
 public:
 	///@brief get all bezier paths
 	///@return const reference to vector of const bezier paths
-	virtual const std::vector<const bezier_path*> &get_paths() const = 0;
+	virtual const IMap::container &get_added_paths() const = 0;
 	
+	///@brief get all bezier paths
+	///@return const reference to vector of const bezier paths
+	virtual const IMap::container &get_removed_paths() const = 0;
+
 	///@brief accept path
 	///@param path pointer to bezier path
-	virtual void accept(const bezier_path* path) = 0;
-	
-	///@brief accept path
-	///@param path index of bezier path
-	virtual void accept(const int path) = 0;
+	virtual void accept(const IMap::iterator &path) = 0;
 	
 	///@brief reject path
 	///@param path pointer to bezier path
-	virtual void reject(const bezier_path* path) = 0;
-	
-	///@brief reject path
-	///@param path index of bezier path
-	virtual void reject(const int path) = 0;
+	virtual void reject(const IMap::iterator &path) = 0;
 };
 
 #endif

@@ -4,21 +4,60 @@
 #include "Interfaces.h"
 #include <string>
 
+
+enum
+{
+	PERMISSION_NONE,
+	PERMISSION_READER
+};
+
 class Auth : public IAuth
 {
 public:
-	Auth(const IDB* DB, std::string login, std::string password);
-	~Auth();
+	Auth(IDB* DB): m_DB(DB)
+	{
+		;
+	}
+	~Auth()
+	{
+		;
+	}
 
 	///@brief ask permissions
 	///@return mangled permissions
-	virtual int permission() const;
+	virtual int permission() const
+	{
+		return 0xFFFFFFFF;
+	}
 	
 	///@brief perform login
 	///@return true if succeed, false otherwise
-	virtual bool login();
+	virtual bool login(const std::string &login, const std::string &password)
+	{
+		m_login = login;
+		m_password = password;
+		return true;
+	}
+
+	virtual const std::string &get_login() const
+	{
+		return m_login;
+	}
+
+	///@brief get user id
+	virtual short id() const
+	{
+		return 1;
+	}
+
+	///@brief id of the first path user can create and commit
+	virtual short allowed_path_id() const
+	{
+		return 0;
+	}
+
 private:
-	const IDB *m_DB;
+	IDB *m_DB;
 private:
 	std::string m_login;
 	std::string m_password;
