@@ -284,11 +284,15 @@ namespace newmeteo {
 		virtual bool remove_path(int index)
 		{
 			if (index < 0) return false;
-            if (m_DB->remove_path(index))
+            int t_index = 0;
+            for (iterator it = m_paths.begin(); it != m_paths.end(); ++it)
             {
-                Map::remove_path(index);
-                update();
-                return true;
+                if (t_index == index)
+                {
+                    this->remove_path(it);
+                    return true;
+                }
+                t_index++;
             }
             return false;
 		}

@@ -370,6 +370,8 @@ TEST(SHAREDMAP, add_path) {
 		}
 		index++;
 	}
+    sm->remove_path(1);
+    sm->remove_path(0);
 }
 
 TEST(SHAREDMAP, remove_path_valid) {
@@ -387,6 +389,7 @@ TEST(SHAREDMAP, remove_path_valid) {
 	ASSERT_EQ(before.size(), after.size() + 1);
 	ASSERT_NE((*elem)->get_lines()[0]->get()[0](1, 0), (*after.begin())->get_lines()[0]->get()[0](1, 0));
 	ASSERT_NE((*elem)->get_lines()[0]->get()[0](0, 0), (*after.begin())->get_lines()[0]->get()[0](0, 0));
+    sm->remove_path(0);
 }
 
 TEST(SHAREDMAP, remove_path_invalid) {
