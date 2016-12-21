@@ -32,6 +32,8 @@ std::vector<bezier_line *> fill_path(int count, int x, int y) {
 }
 */
 
+
+/*AUTH*/
 //We can't add user from app so user mmaximov have to be on every tested machine
 TEST(AUTH, login_valid) {
 	IDB* db = new MY_DB();
@@ -66,18 +68,22 @@ TEST(AUTH, perm_no_valid) {
 	ASSERT_NE(0, perm);
 	ASSERT_NE(1, perm);
 }
+/*AUTH*/
 
-TEST(BIZIER, valid_path) {
+/*BEZIER*/
+TEST(BEZIER, valid_path) {
 	bezier_path* path = new bezier_path(fill_path(5, 0, 0));
 	ASSERT_TRUE(path->test());
 }
 
-TEST(BIZIER, null) {
+TEST(BEZIER, null) {
 	std::vector<bezier_line *> lines;
 	bezier_path* path = new bezier_path(lines);
 	ASSERT_FALSE(path->test());
 }
+/*BEZIER*/
 
+/*DATABASE*/
 TEST(DATABASE, connect) {
 	IDB* db = new MY_DB();
 	ASSERT_TRUE(db->connect());
@@ -88,7 +94,9 @@ TEST(DATABASE, request) {
 	db->connect();
 	ASSERT_TRUE(db->request());
 }
+/*DATABASE*/
 
+/*MAP*/
 TEST(MAP, get) {
 	newmeteo::Map* map = new newmeteo::Map();
 	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
@@ -170,8 +178,9 @@ TEST(MAP, right_remove) {
 	map->add_path(path2);
 	ASSERT_TRUE(map->remove_path(2));
 }
+/*MAP*/
 
-
+/*QUEUE*/
 class TestQueue : public ::testing::Test
 {
 protected:
@@ -233,7 +242,7 @@ TEST_F(TestQueue, reject_no_valid_id) {
 	ASSERT_FALSE(accepted->reject(-1, path));
 }
 
-TEST(Queue, accept_real_by_id_if_exist) {
+TEST(QUEUE, accept_real_by_id_if_exist) {
 	IDB* db = new MY_DB();
 	db->connect();
 	Queue* qu = new Queue(db);
@@ -245,7 +254,7 @@ TEST(Queue, accept_real_by_id_if_exist) {
 	}	
 }
 
-TEST(Queue, reject_real_by_id_if_exist) {
+TEST(QUEUE, reject_real_by_id_if_exist) {
 	IDB* db = new MY_DB();
 	db->connect();
 	Queue* qu = new Queue(db);
@@ -256,8 +265,10 @@ TEST(Queue, reject_real_by_id_if_exist) {
 		ASSERT_EQ(size_before - 1, qu->get_added_paths().size());
 	}
 }
+/*QUEUE*/
 
-TEST(Reconnaissance, find_region_valid) {
+/*RECONNAISSANCE*/
+TEST(RECONNAISSANCE, find_region_valid) {
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -270,7 +281,7 @@ TEST(Reconnaissance, find_region_valid) {
 	ASSERT_EQ(2147483648, regions[0]);
 }
 
-TEST(Reconnaissance, is_inside) {
+TEST(RECONNAISSANCE, is_inside) {
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -281,7 +292,7 @@ TEST(Reconnaissance, is_inside) {
 	ASSERT_TRUE(rec->is_inside(dots[0], dots[1], dots[2], dots[3]));
 }
 
-TEST(Reconnaissance, is_not_inside) {
+TEST(RECONNAISSANCE, is_not_inside) {
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -292,7 +303,7 @@ TEST(Reconnaissance, is_not_inside) {
 	ASSERT_FALSE(rec->is_inside(dots[0], dots[1], dots[2], dots[3]));
 }
 
-TEST(Reconnaissance, is_intersects) {
+TEST(RECONNAISSANCE, is_intersects) {
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -303,7 +314,7 @@ TEST(Reconnaissance, is_intersects) {
 	ASSERT_TRUE(rec->is_intersects(dots[0], dots[1], dots[2], dots[3], true, true));
 }
 
-TEST(Reconnaissance, is_not_intersects) {
+TEST(RECONNAISSANCE, is_not_intersects) {
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -314,7 +325,7 @@ TEST(Reconnaissance, is_not_intersects) {
 	ASSERT_FALSE(rec->is_intersects(dots[0], dots[1], dots[2], dots[3], true, true));
 }
 
-TEST(Reconnaissance, find_path_valid) {
+TEST(RECONNAISSANCE, find_path_valid) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_path* path = new bezier_path(fill_path(3, 0, 1));
 	auto lines = path->get_lines();
@@ -324,7 +335,7 @@ TEST(Reconnaissance, find_path_valid) {
 	ASSERT_EQ(2147483648, regions[0]);
 }
 
-TEST(Reconnaissance, find_path_invalid) {
+TEST(RECONNAISSANCE, find_path_invalid) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_path* path = NULL;
 	std::vector<unsigned int> regions;
@@ -332,16 +343,17 @@ TEST(Reconnaissance, find_path_invalid) {
 	ASSERT_EQ(0, regions.size());
 }
 
-TEST(Reconnaissance, find_region_empty) {
+TEST(RECONNAISSANCE, find_region_empty) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_line* line = NULL;
 	std::vector<unsigned int> regions;
 	rec->find_region(line, regions);
 	ASSERT_EQ(0, regions.size());
 }
+/*RECONNAISSANCE*/
 
-
-TEST(SharedMap, add_path) {
+/*SHAREDMAP*/
+TEST(SHAREDMAP, add_path) {
 	IDB* db = new MY_DB();
 	db->connect();
 	SharedMap* sm = new SharedMap(db);
@@ -360,7 +372,7 @@ TEST(SharedMap, add_path) {
 	}
 }
 
-TEST(SharedMap, remove_path_valid) {
+TEST(SHAREDMAP, remove_path_valid) {
 	IDB* db = new MY_DB();
 	db->connect();
 	SharedMap* sm = new SharedMap(db);
@@ -377,10 +389,10 @@ TEST(SharedMap, remove_path_valid) {
 	ASSERT_NE((*elem)->get_lines()[0]->get()[0](0, 0), (*after.begin())->get_lines()[0]->get()[0](0, 0));
 }
 
-TEST(SharedMap, server_remove_path_invalid) {
+TEST(SHAREDMAP, server_remove_path_invalid) {
 	IDB* db = new MY_DB();
 	db->connect();
 	SharedMap* sm = new SharedMap(db);
 	EXPECT_TRUE(sm->remove_path(-1));
 }
-
+/*SHAREDMAP*/
