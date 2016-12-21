@@ -389,7 +389,7 @@ TEST(SHAREDMAP, remove_path_valid) {
 	ASSERT_NE((*elem)->get_lines()[0]->get()[0](0, 0), (*after.begin())->get_lines()[0]->get()[0](0, 0));
 }
 
-TEST(SHAREDMAP, server_remove_path_invalid) {
+TEST(SHAREDMAP, remove_path_invalid) {
 	IDB* db = new MY_DB();
 	db->connect();
 	SharedMap* sm = new SharedMap(db);
