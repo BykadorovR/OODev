@@ -270,6 +270,50 @@ TEST(Reconnaissance, find_region_valid) {
 	ASSERT_EQ(2147483648, regions[0]);
 }
 
+TEST(Reconnaissance, is_inside) {
+	Reconnaissance* rec = new Reconnaissance();
+	Vector2f* dots;
+	dots = new Vector2f[4];
+	dots[0] = Vector2f(0, 0);
+	dots[1] = Vector2f(0, 1);
+	dots[2] = Vector2f(-1, -1);
+	dots[3] = Vector2f(1, -1);
+	ASSERT_TRUE(rec->is_inside(dots[0], dots[1], dots[2], dots[3]));
+}
+
+TEST(Reconnaissance, is_not_inside) {
+	Reconnaissance* rec = new Reconnaissance();
+	Vector2f* dots;
+	dots = new Vector2f[4];
+	dots[0] = Vector2f(-2, 2);
+	dots[1] = Vector2f(0, 1);
+	dots[2] = Vector2f(-1, -1);
+	dots[3] = Vector2f(1, -1);
+	ASSERT_FALSE(rec->is_inside(dots[0], dots[1], dots[2], dots[3]));
+}
+
+TEST(Reconnaissance, is_intersects) {
+	Reconnaissance* rec = new Reconnaissance();
+	Vector2f* dots;
+	dots = new Vector2f[4];
+	dots[0] = Vector2f(0, 0);
+	dots[1] = Vector2f(1, 1);
+	dots[2] = Vector2f(0, 1);
+	dots[3] = Vector2f(1, 0);
+	ASSERT_TRUE(rec->is_intersects(dots[0], dots[1], dots[2], dots[3], true, true));
+}
+
+TEST(Reconnaissance, is_not_intersects) {
+	Reconnaissance* rec = new Reconnaissance();
+	Vector2f* dots;
+	dots = new Vector2f[4];
+	dots[0] = Vector2f(0, 0);
+	dots[1] = Vector2f(1, 1);
+	dots[2] = Vector2f(5, 5);
+	dots[3] = Vector2f(5, 6);
+	ASSERT_FALSE(rec->is_intersects(dots[0], dots[1], dots[2], dots[3], true, true));
+}
+
 TEST(Reconnaissance, find_path_valid) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_path* path = new bezier_path(fill_path(3, 0, 1));
@@ -299,6 +343,7 @@ TEST(Reconnaissance, find_region_empty) {
 
 TEST(SharedMap, add_path) {
 	IDB* db = new MY_DB();
+	db->connect();
 	SharedMap* sm = new SharedMap(db);
 	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
 	sm->add_path(path);
@@ -317,6 +362,7 @@ TEST(SharedMap, add_path) {
 
 TEST(SharedMap, remove_path_valid) {
 	IDB* db = new MY_DB();
+	db->connect();
 	SharedMap* sm = new SharedMap(db);
 	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
 	bezier_path* path2 = new bezier_path(fill_path(3, 1, 1));
@@ -333,6 +379,7 @@ TEST(SharedMap, remove_path_valid) {
 
 TEST(SharedMap, server_remove_path_invalid) {
 	IDB* db = new MY_DB();
+	db->connect();
 	SharedMap* sm = new SharedMap(db);
 	EXPECT_TRUE(sm->remove_path(-1));
 }
