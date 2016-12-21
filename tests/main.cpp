@@ -16,7 +16,7 @@ std::vector<bezier_line *> fill_path(int count, int x, int y) {
 		Vector2f* dots;
 		dots = new Vector2f[4];
 		for (int j = 0; j < 4; j++) {
-			dots[j] = Vector2f(x, y);
+			dots[j] = Vector2f(x+j+i, y+j+i);
 		}
 		lines.push_back(new bezier_line(dots));
 	}
