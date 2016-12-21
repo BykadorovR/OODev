@@ -231,9 +231,9 @@ namespace newmeteo {
 	class SharedMap : public Map
 	{
 	public:
-		SharedMap(const IDB *m_DB)
+		SharedMap(IDB *DB) : m_DB(DB)
 		{
-			;
+			update();
 		}
 		~SharedMap()
 		{
@@ -250,8 +250,11 @@ namespace newmeteo {
 			//если существует путь с таким же айди, то есть логическая ошибка
 			//обычный механизм действий - поместить в очередь добавления на сервере
 			//поместить в локальную копию (вызов метода ниже)
-
-			Map::add_path(path);
+            if (m_DB->add_path(path))
+            {
+                Map::add_path(path);
+                update();
+            }
 		}
 
 		///@brief remove path
@@ -271,14 +274,23 @@ namespace newmeteo {
 			//если в очередях пути нет, то переносим его в очередь удаления
 			//удалить из локальной копии по ситуации исходя из вышесказанного (вызов метода ниже)
 
-			Map::remove_path(it);
+            if (m_DB->remove_path((*it)->get_id()))
+            {
+                Map::remove_path(it);
+                update();
+            }
 		}
 
 		virtual bool remove_path(int index)
 		{
 			if (index < 0) return false;
-			Map::remove_path(index);
-			return true;
+            if (m_DB->remove_path(index))
+            {
+                Map::remove_path(index);
+                update();
+                return true;
+            }
+            return false;
 		}
 
 		///@brief get all bezier paths
