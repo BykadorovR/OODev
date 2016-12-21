@@ -36,27 +36,43 @@ namespace newmeteo {
 
 		///@brief accept path
 		///@param path pointer to bezier path
-		virtual void accept(const IMap::iterator &path)
+		virtual bool accept(const IMap::iterator &path, IMap::container& list)
 		{
-			//всего для элемента очереди должно быть три значения
-			//подтвержден, отклонен, еще не успели рассмотреть
-			//обозначаем элемент подтвержденным
-			;
+			list.erase(path);
+			return true;
 		}
-		virtual bool accept(int index) {
+		virtual bool accept(int index, IMap::container& list) {
+			if (index < 0 || index >= list.size())
+				return false;
+			int l_index = 0;
+			for (auto it = list.begin(); it != list.end(); ++it) {
+				if (l_index == index) {
+					list.erase(it);
+					break;
+				}
+				l_index++;
+			}
 			return true;
 		}
 		///@brief reject path
 		///@param path pointer to bezier path
-		virtual void reject(const IMap::iterator &path)
+		virtual bool reject(const IMap::iterator &path, IMap::container& list)
 		{
-			//определяем очередь. можно при помощи запроса, можно при помощи добавления методов принять отклонить для каждой очереди
-			//удаляем из очереди добавления, т.к. клиент отказал, а нужно согласие всех
-			//переносим из очереди удаления обратно на карту, т.к. клиент отказал, а нужно согласие всех
-			;
+			list.erase(path);
+			return true;
 		}
 
-		virtual bool reject(int index) {
+		virtual bool reject(int index, IMap::container& list) {
+			if (index < 0 || index >= list.size())
+				return false;
+			int l_index = 0;
+			for (auto it = list.begin(); it != list.end(); ++it) {
+				if (l_index == index) {
+					list.erase(it);
+					break;
+				}
+				l_index++;
+			}
 			return true;
 		}
 

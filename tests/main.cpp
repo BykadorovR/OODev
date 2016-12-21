@@ -199,7 +199,7 @@ protected:
 
 TEST_F(TestQueue, accept_id) {
 	auto test_path = accepted->get_added_paths();
-	accepted->accept(0);
+	accepted->accept(0, test_path);
 	ASSERT_EQ(test_path.size(), 2);
 	int index = 0;
 	for (auto it = test_path.begin(); it != test_path.end(); it++) {
@@ -211,12 +211,13 @@ TEST_F(TestQueue, accept_id) {
 }
 
 TEST_F(TestQueue, accept_no_valid_id) {
-	ASSERT_FALSE(accepted->accept(-1));
+	auto path = accepted->get_added_paths();
+	ASSERT_FALSE(accepted->accept(-1, path));
 }
 
 TEST_F(TestQueue, reject_id) {
-	auto test_path = accepted->get_removed_paths();
-	accepted->reject(0);
+	auto test_path = accepted->get_added_paths();
+	accepted->reject(0, test_path);
 	ASSERT_EQ(test_path.size(), 2);
 	int index = 0;
 	for (auto it = test_path.begin(); it != test_path.end(); it++) {
@@ -228,7 +229,8 @@ TEST_F(TestQueue, reject_id) {
 }
 
 TEST_F(TestQueue, reject_no_valid_id) {
-	ASSERT_FALSE(accepted->reject(-1));
+	auto path = accepted->get_added_paths();
+	ASSERT_FALSE(accepted->reject(-1, path));
 }
 
 TEST(Queue, accept_real_by_id_if_exist) {
@@ -238,7 +240,7 @@ TEST(Queue, accept_real_by_id_if_exist) {
 	auto test_path = qu->get_added_paths();
 	int size_before = test_path.size();
 	if (size_before > 0) {
-		qu->accept(0);
+		qu->accept(0, test_path);
 		ASSERT_EQ(size_before - 1, qu->get_added_paths().size());
 	}	
 }
@@ -250,7 +252,7 @@ TEST(Queue, reject_real_by_id_if_exist) {
 	auto test_path = qu->get_added_paths();
 	int size_before = test_path.size();
 	if (size_before > 0) {
-		qu->reject(0);
+		qu->reject(0, test_path);
 		ASSERT_EQ(size_before - 1, qu->get_added_paths().size());
 	}
 }
