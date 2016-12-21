@@ -292,10 +292,14 @@ namespace newmeteo {
 		virtual void drawGL() {
 		};
 	private:
-		const IDB *m_DB;
+		IDB *m_DB;
 		const Reconnaissance *m_rec;
 	private:
-		//!TODO: add decomposition methods(from IDB request to normal representation)
+        virtual bool update()
+        {
+            return m_DB->get_paths(m_paths);
+        }
+        //!TODO: add decomposition methods(from IDB request to normal representation)
 		//!TODO: add local changes!!! should be drawn differently
 
 	};
