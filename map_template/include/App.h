@@ -51,6 +51,56 @@ namespace newmeteo {
             return true;
         }
 
+        virtual bool get_paths(std::list<const bezier_path*>& paths)
+        {
+            if (exec("select * from paths"))
+            {
+                if (storeResult())
+                {
+                    int numpaths = getRowCount();
+                    std::vector<std::string> ids;
+                    for (int i = 0; i < numpaths; i++)
+                    {
+                        ids.push_back(getFieldValue(i, "pathid"));
+                    }
+                    paths.clear();
+                    for (int pathid = 0; pathid < ids.size(); pathid++)
+                    {
+                        if (exec("select * from paths where pathid = '" + ids[pathid] + "'"))
+                        {
+                            if (storeResult())
+                            {
+
+                                int t_depth = stoi(getFieldValue(0, "depth"));
+                                std::string t_comment = getFieldValue(0, "comment");
+                                std::vector<bezier_line*> t_lines;
+
+                                if (exec("select * from lines where pathid = '" + ids[pathid] + "'"))
+                                {
+                                    if (storeResult())
+                                    {
+                                        int numlines = getRowCount();
+                                        for (int lineid = 0; lineid < numlines; lineid++)
+                                        {
+                                            Vector2f t_dots[4];
+                                            t_dots[0] = Vector2f(stof(getFieldValue(lineid, "spx")), stof(getFieldValue(lineid, "spy")));
+                                            t_dots[1] = Vector2f(stof(getFieldValue(lineid, "d1x")), stof(getFieldValue(lineid, "d1y")));
+                                            t_dots[2] = Vector2f(stof(getFieldValue(lineid, "d2x")), stof(getFieldValue(lineid, "d2y")));
+                                            t_dots[3] = Vector2f(stof(getFieldValue(lineid, "epx")), stof(getFieldValue(lineid, "epy")));
+
+                                            t_lines.push_back(new bezier_line(t_dots));
+                                        }
+                                    }
+                                }
+                                paths.push_back(new bezier_path(t_lines, stoi(ids[pathid]), t_depth, t_comment));
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
     public:
         MY_DB()
         {
