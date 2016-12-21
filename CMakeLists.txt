@@ -151,10 +151,10 @@ endif()
 ################################
 ADD_SUBDIRECTORY (googletest)
 enable_testing()
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${MYSQL_INCLUDE_DIR})
 ################################
 FILE(GLOB SRC_test tests/*.c*)
 SET(CMAKE_CXX_FLAGS_DEBUG /MTd)
 add_executable(${PROJECT_NAME}_test ${SRC_test} ${INCLUDE})
-target_link_libraries(${PROJECT_NAME}_test gtest gtest_main)
+target_link_libraries(${PROJECT_NAME}_test gtest gtest_main ${MYSQL_LIBRARY} ${MYSQLCONN_LIBRARY})
 add_test( ${PROJECT_NAME}_test ${PROJECT_NAME}_test )
