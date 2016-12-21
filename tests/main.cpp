@@ -393,6 +393,6 @@ TEST(SHAREDMAP, remove_path_invalid) {
 	IDB* db = new MY_DB();
 	db->connect();
 	SharedMap* sm = new SharedMap(db);
-	EXPECT_TRUE(sm->remove_path(-1));
+	EXPECT_FALSE(sm->remove_path(-1));
 }
 /*SHAREDMAP*/

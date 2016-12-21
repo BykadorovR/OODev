@@ -276,6 +276,7 @@ namespace newmeteo {
 
 		virtual bool remove_path(int index)
 		{
+			if (index < 0) return false;
 			Map::remove_path(index);
 			return true;
 		}
