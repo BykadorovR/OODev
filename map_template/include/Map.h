@@ -288,7 +288,8 @@ namespace newmeteo {
 		}
 
 		///@brief draw function. contains GL functionality
-		virtual void drawGL() = 0;
+		virtual void drawGL() {
+		};
 	private:
 		const IDB *m_DB;
 		const Reconnaissance *m_rec;

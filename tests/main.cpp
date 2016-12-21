@@ -1,8 +1,9 @@
+#define TESTING 1
 #include <gtest/gtest.h>
 #include "Interfaces.h"
 #include "Auth.h"
+#include "App.h"
 #include "Geometry.h"
-#define TESTING 1
 #include "Map.h"
 #include "Queue.h"
 
@@ -30,32 +31,40 @@ std::vector<bezier_line *> fill_path(int count, int x, int y) {
 	std::getchar(); // keep console window open until Return keystroke
 }
 */
+
+//We can't add user from app so user mmaximov have to be on every tested machine
 TEST(AUTH, login_valid) {
-	IDB* db; //Create valid DB object when it will be added
+	IDB* db = new MY_DB();
+	db->connect();
 	Auth* auth = new Auth(db);
-	ASSERT_TRUE(auth->login("roman", "1234"));
+
+	ASSERT_TRUE(auth->login("mmaximov", "admin"));
 }
 
 TEST(AUTH, login_no_valid) {
-	IDB* db; //Create valid DB object when it will be added
+	IDB* db = new MY_DB();
+	db->connect();
 	Auth* auth = new Auth(db);
 	ASSERT_FALSE(auth->login("null", "null"));
 }
 
 TEST(AUTH, perm_valid) {
-	IDB* db; //Create valid DB object when it will be added
+	IDB* db = new MY_DB();
+	db->connect();
 	Auth* auth = new Auth(db);
-	auth->login("roman", "1234");
+	auth->login("mmaximov", "admin");
 	int perm = auth->permission();
-	ASSERT_NE(-1, perm);
+	ASSERT_EQ(1, perm);
 }
 
 TEST(AUTH, perm_no_valid) {
-	IDB* db; //Create valid DB object when it will be added
+	IDB* db = new MY_DB();
+	db->connect();
 	Auth* auth = new Auth(db);
 	auth->login("null", "null");
 	int perm = auth->permission();
-	ASSERT_EQ(-1, perm);
+	ASSERT_NE(0, perm);
+	ASSERT_NE(1, perm);
 }
 
 TEST(BIZIER, valid_path) {
@@ -70,13 +79,14 @@ TEST(BIZIER, null) {
 }
 
 TEST(DATABASE, connect) {
-	//DB* db = new DB();
-	//ASSERT_TRUE(db->connect());
+	IDB* db = new MY_DB();
+	ASSERT_TRUE(db->connect());
 }
 
 TEST(DATABASE, request) {
-	//DB* db = new DB();
-	//ASSERT_TRUE(db->connect());
+	IDB* db = new MY_DB();
+	db->connect();
+	ASSERT_TRUE(db->request());
 }
 
 TEST(MAP, get) {
@@ -222,8 +232,9 @@ TEST_F(TestQueue, reject_no_valid_id) {
 }
 
 TEST(Queue, accept_real_by_id_if_exist) {
-	IDB* db;// = new DB();
-	Queue* qu = new Queue((IDB*)db);
+	IDB* db = new MY_DB();
+	db->connect();
+	Queue* qu = new Queue(db);
 	auto test_path = qu->get_added_paths();
 	int size_before = test_path.size();
 	if (size_before > 0) {
@@ -233,8 +244,9 @@ TEST(Queue, accept_real_by_id_if_exist) {
 }
 
 TEST(Queue, reject_real_by_id_if_exist) {
-	IDB* db;// = new DB();
-	Queue* qu = new Queue((IDB*)db);
+	IDB* db = new MY_DB();
+	db->connect();
+	Queue* qu = new Queue(db);
 	auto test_path = qu->get_added_paths();
 	int size_before = test_path.size();
 	if (size_before > 0) {
@@ -244,7 +256,6 @@ TEST(Queue, reject_real_by_id_if_exist) {
 }
 
 TEST(Reconnaissance, find_region_valid) {
-	//Висит
 	Reconnaissance* rec = new Reconnaissance();
 	Vector2f* dots;
 	dots = new Vector2f[4];
@@ -257,16 +268,22 @@ TEST(Reconnaissance, find_region_valid) {
 	ASSERT_EQ(2147483648, regions[0]);
 }
 
-TEST(Reconnaissance, find_path_invalid) {
-	//Висит
+TEST(Reconnaissance, find_path_valid) {
 	Reconnaissance* rec = new Reconnaissance();
 	bezier_path* path = new bezier_path(fill_path(3, 0, 1));
 	auto lines = path->get_lines();
 	std::vector<unsigned int> regions;
 	rec->find_region(path, regions);
-	std::cout << regions.size() << std::endl;
-	//Проверить, что регион корректный
-	//EXPECT_THAT(rec->find_region(path, regions), HasSubstr(""));
+	ASSERT_EQ(1, regions.size());
+	ASSERT_EQ(2147483648, regions[0]);
+}
+
+TEST(Reconnaissance, find_path_invalid) {
+	Reconnaissance* rec = new Reconnaissance();
+	bezier_path* path = NULL;
+	std::vector<unsigned int> regions;
+	rec->find_region(path, regions);
+	ASSERT_EQ(0, regions.size());
 }
 
 TEST(Reconnaissance, find_region_empty) {
@@ -276,44 +293,45 @@ TEST(Reconnaissance, find_region_empty) {
 	rec->find_region(line, regions);
 	ASSERT_EQ(0, regions.size());
 }
-/*
-TEST(SharedMap, server_add_path) {
-	DB* db = new DB();
-	SharedMap* sm = new SharedMap((IDB *) db);
-// temporary	
-	bezier_path* path = new bezier_path();
-	fill_path(path, 3, 0, 0);
-	sm->m_paths.push_back(path);
 
+
+TEST(SharedMap, add_path) {
+	IDB* db = new MY_DB();
+	SharedMap* sm = new SharedMap(db);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	sm->add_path(path);
 	auto before = sm->get_paths();
 	sm->add_path(path);
 	auto after = sm->get_paths();
 	ASSERT_EQ(before.size(), after.size() - 1);
-	ASSERT_EQ(after[after.size() - 1]->m_lines[0]->get()[0](1, 0), 0);
+	int index = 0;
+	for (auto it = after.begin(); it != after.end(); it++) {
+		if (index == after.size() - 1) {
+			ASSERT_EQ((*it)->get_lines()[0]->get()[0](1, 0), 0);
+		}
+		index++;
+	}
 }
 
-TEST(SharedMap, server_remove_path_valid) {
-	DB* db = new DB();
-	SharedMap* sm = new SharedMap((IDB *)db);
-// temporary	
-	bezier_path* path = new bezier_path();
-	fill_path(path, 3, 0, 0);
-	sm->m_paths.push_back(path);
-
+TEST(SharedMap, remove_path_valid) {
+	IDB* db = new MY_DB();
+	SharedMap* sm = new SharedMap(db);
+	bezier_path* path = new bezier_path(fill_path(3, 0, 0));
+	bezier_path* path2 = new bezier_path(fill_path(3, 1, 1));
+	sm->add_path(path);
+	sm->add_path(path2);
 	auto before = sm->get_paths();
-	auto elem = before[0];
-
+	auto elem = before.begin();
 	sm->remove_path(0);
 	auto after = sm->get_paths();
 	ASSERT_EQ(before.size(), after.size() + 1);
-	ASSERT_NE(elem->m_lines[0]->get()[0](1, 0), after[0]->m_lines[0]->get()[0](1, 0));
-	ASSERT_NE(elem->m_lines[0]->get()[0](0, 0), after[0]->m_lines[0]->get()[0](0, 0));
+	ASSERT_NE((*elem)->get_lines()[0]->get()[0](1, 0), (*after.begin())->get_lines()[0]->get()[0](1, 0));
+	ASSERT_NE((*elem)->get_lines()[0]->get()[0](0, 0), (*after.begin())->get_lines()[0]->get()[0](0, 0));
 }
 
 TEST(SharedMap, server_remove_path_invalid) {
-	DB* db = new DB();
-	SharedMap* sm = new SharedMap((IDB *)db);
-	sm->remove_path(-1);
+	IDB* db = new MY_DB();
+	SharedMap* sm = new SharedMap(db);
+	EXPECT_TRUE(sm->remove_path(-1));
 }
-*/
 
