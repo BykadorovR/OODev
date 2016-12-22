@@ -45,7 +45,7 @@ namespace newmeteo {
 		///@param path is bezier path
 		virtual void add_path(const bezier_path *path)
 		{
-			;
+			SharedMap::add_path(path);
 		}
 
 		///@brief remove path

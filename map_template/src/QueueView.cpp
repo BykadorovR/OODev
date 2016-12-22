@@ -5,8 +5,7 @@ using namespace newmeteo;
 
 QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
-
-	m_presenter = new QueuePresenter(model, this);
+	m_main_app = handler;
 	this->SetSizeHints(wxDefaultSize, wxDefaultSize);
 
 	wxBoxSizer* bSizer3;
@@ -36,12 +35,16 @@ QueueView::QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWi
 	this->SetSizer(bSizer3);
 	this->Layout();
 
-	this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, handler);
+	this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, m_main_app);
 
 	this->Centre(wxBOTH);
+
+	//establish links
+	m_presenter = new QueuePresenter(model, this);
 }
 
 QueueView::~QueueView()
 {
 	delete m_presenter;
+	this->Disconnect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, m_main_app);
 }

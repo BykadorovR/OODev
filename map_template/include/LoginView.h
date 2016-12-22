@@ -13,6 +13,7 @@ namespace newmeteo {
 	private:
 		LoginPresenter *m_presenter;
 		Model *m_model;
+		wxEvtHandler *m_main_app;
 	protected:
 		wxTextCtrl* m_text_login;
 		wxTextCtrl* m_text_password;
@@ -22,7 +23,7 @@ namespace newmeteo {
 
 		LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(1020, 562), long style = wxCAPTION | wxTAB_TRAVERSAL);
 
-		~LoginView();
+		virtual ~LoginView();
 
 	};
 
@@ -33,7 +34,7 @@ namespace newmeteo {
 		{
 			m_model->accept(this);
 		}
-		~LoginPresenter()
+		virtual ~LoginPresenter()
 		{
 			m_model->remove(this);
 		}

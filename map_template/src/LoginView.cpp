@@ -5,6 +5,7 @@ using namespace newmeteo;
 
 LoginView::LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style)
 {
+	m_main_app = handler;
 	m_model = model;
 	m_presenter = new LoginPresenter(model, this);
 
@@ -23,7 +24,7 @@ LoginView::LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWi
 	bSizer3->Add(m_button_login, 0, wxALL, 5);
 
 	m_button_login->Connect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(LoginPresenter::button_login_click), NULL, m_presenter);
-	this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, handler);
+	this->Connect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, m_main_app);
 
 	this->SetSizer(bSizer3);
 	this->Layout();
@@ -33,6 +34,8 @@ LoginView::LoginView(wxEvtHandler *handler, Model *model, wxWindow* parent, wxWi
 
 LoginView::~LoginView()
 {
+
+	this->Disconnect(wxEVT_CLOSE_WINDOW, wxCloseEventHandler(MyApp::CloseView), NULL, m_main_app);
 	m_button_login->Disconnect(wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(LoginPresenter::button_login_click), NULL, m_presenter);
 	delete m_presenter;
 }
