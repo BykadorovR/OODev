@@ -91,6 +91,16 @@ namespace newmeteo {
 			return m_depth;
 		}
 
+		const float get_depth() const
+		{
+			return m_depth;
+		}
+
+		const std::string &get_comment() const
+		{
+			return m_comment;
+		}
+
 	private:
 		float m_depth;
 		std::vector<bezier_line*> m_lines;
