@@ -23,14 +23,56 @@ using namespace newmeteo;
 //END_EVENT_TABLE()
 
 
-void MapGLPane::mouseMoved(wxMouseEvent& event) {}
-void MapGLPane::mouseDown(wxMouseEvent& event) {}
-void MapGLPane::mouseWheelMoved(wxMouseEvent& event) {}
-void MapGLPane::mouseReleased(wxMouseEvent& event) {}
-void MapGLPane::rightClick(wxMouseEvent& event) {}
-void MapGLPane::mouseLeftWindow(wxMouseEvent& event) {}
-void MapGLPane::keyPressed(wxKeyEvent& event) {}
-void MapGLPane::keyReleased(wxKeyEvent& event) {}
+void MapGLPanePresenter::mouseMoved(wxMouseEvent& event)
+{
+	const float speed_persp= 0.1f;
+	const float speed_proj = 1.0f;
+	if (!event.LeftIsDown())
+		return;
+	wxPoint pos = event.GetPosition();
+	if (m_active_3dpane)
+	{
+		m_angles.x() += speed_persp * (pos.y - m_prev_position.y);
+		m_angles.y() += speed_persp * (pos.x - m_prev_position.x);
+	}
+	else
+	{
+		m_projective_position.x() += speed_proj * (pos.x - m_prev_position.x);
+		m_projective_position.y() += speed_proj * (pos.y - m_prev_position.y);
+	}
+
+	m_prev_position = pos;
+	m_pane->Refresh();
+}
+void MapGLPanePresenter::mouseDown(wxMouseEvent& event)
+{
+	m_pane->SetFocus();
+	m_prev_position = event.GetPosition();
+
+	m_active_3dpane = m_prev_position.x > m_pane->getWidth() / 2;
+
+}
+void MapGLPanePresenter::mouseWheelMoved(wxMouseEvent& event)
+{
+	const float scale_step_proj = 0.005f;
+	const float scale_step_persp = 1.0f;
+	wxPoint pos = event.GetPosition();
+	if (pos.x > m_pane->getWidth() / 2)
+	{
+		m_scale[1] += scale_step_persp * event.GetWheelRotation() / abs(event.GetWheelRotation());
+	}
+	else
+	{
+		m_scale[0] += scale_step_proj * event.GetWheelRotation() / abs(event.GetWheelRotation());
+	}
+	m_pane->Refresh();
+}
+
+void MapGLPanePresenter::mouseReleased(wxMouseEvent& event) { ; }
+void MapGLPanePresenter::rightClick(wxMouseEvent& event) { ; }
+void MapGLPanePresenter::mouseLeftWindow(wxMouseEvent& event) { ; }
+void MapGLPanePresenter::keyPressed(wxKeyEvent& event) { ; }
+void MapGLPanePresenter::keyReleased(wxKeyEvent& event) { ; }
 
 // Vertices and faces of a simple cube to demonstrate 3D render
 // source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
@@ -45,8 +87,6 @@ MapGLPane::MapGLPane(wxFrame* parent, int* args) :
 	wxGLCanvas(parent, wxID_ANY, args, wxDefaultPosition, wxDefaultSize, wxFULL_REPAINT_ON_RESIZE)
 {
 	m_context = new wxGLContext(this);
-	Connect(wxEVT_PAINT, wxPaintEventHandler(MapGLPane::render), NULL, this);
-	Connect(wxEVT_SIZE, wxSizeEventHandler(MapGLPane::resized), NULL, this);
 
 	// prepare a simple cube to demonstrate 3D render
 	// source: http://www.opengl.org/resources/code/samples/glut_examples/examples/cube.c
@@ -66,20 +106,21 @@ MapGLPane::~MapGLPane()
 	delete m_context;
 }
 
-void MapGLPane::resized(wxSizeEvent& evt)
+void MapGLPanePresenter::resized(wxSizeEvent& evt)
 {
 	//	wxGLCanvas::OnSize(evt);
 
-	Refresh();
+	m_pane->Refresh();
 }
 
 /** Inits the OpenGL viewport for drawing in 3D. */
-void MapGLPane::prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y)
+void MapGLPanePresenter::prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y)
 {
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black Background
 	glClearDepth(1.0f);	// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
+	glEnable(GL_MAP1_VERTEX_3);
 	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
@@ -97,12 +138,14 @@ void MapGLPane::prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_
 }
 
 /** Inits the OpenGL viewport for drawing in 2D. */
-void MapGLPane::prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y)
+void MapGLPanePresenter::prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black Background
 	glEnable(GL_TEXTURE_2D);   // textures
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_BLEND);
+	glEnable(GL_POINT_SMOOTH);
+	glEnable(GL_MAP1_VERTEX_3);
 	glDisable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -110,7 +153,8 @@ void MapGLPane::prepare2DViewport(int topleft_x, int topleft_y, int bottomrigth_
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluOrtho2D(topleft_x, bottomrigth_x, bottomrigth_y, topleft_y);
+	glOrtho(topleft_x, bottomrigth_x,
+		bottomrigth_y, topleft_y, 10000.f, -10000.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -126,57 +170,53 @@ int MapGLPane::getHeight()
 }
 
 
-void MapGLPane::render(wxPaintEvent& evt)
+void MapGLPanePresenter::render(wxPaintEvent& evt)
 {
-	if (!IsShown()) return;
+	if (!m_pane->IsShown()) return;
 
-	wxGLCanvas::SetCurrent(*m_context);
-	wxPaintDC(this); // only to be used in paint events. use wxClientDC to paint outside the paint event
+	m_pane->SetCurrent(*m_pane->m_context);
+	wxPaintDC(this->m_pane); // only to be used in paint events. use wxClientDC to paint outside the paint event
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// ------------- draw some 2D ----------------
-	prepare2DViewport(0, 0, getWidth() / 2, getHeight());
+	prepare2DViewport(0, 0, m_pane->getWidth() / 2, m_pane->getHeight());
 	glLoadIdentity();
 
-	// white background
-	glColor4f(1, 1, 1, 1);
-	glBegin(GL_QUADS);
-	glVertex3f(0, 0, 0);
-	glVertex3f(getWidth(), 0, 0);
-	glVertex3f(getWidth(), getHeight(), 0);
-	glVertex3f(0, getHeight(), 0);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBegin(GL_LINES);
+	glVertex2f(m_pane->getWidth() / 2, 0);
+	glVertex2f(m_pane->getWidth() / 2, m_pane->getHeight());
 	glEnd();
 
-	// red square
-	glColor4f(1, 0, 0, 1);
-	glBegin(GL_QUADS);
-	glVertex3f(getWidth() / 8, getHeight() / 3, 0);
-	glVertex3f(getWidth() * 3 / 8, getHeight() / 3, 0);
-	glVertex3f(getWidth() * 3 / 8, getHeight() * 2 / 3, 0);
-	glVertex3f(getWidth() / 8, getHeight() * 2 / 3, 0);
-	glEnd();
+	glTranslatef(m_projective_position.x(), m_projective_position.y(), 0.0f);
+	glScalef(1.0f / m_scale[0], 1.0f / m_scale[0], 1.0f / m_scale[0]);
+
+
+	custom_render_2d();
 
 	// ------------- draw some 3D ----------------
-	prepare3DViewport(getWidth() / 2, 0, getWidth(), getHeight());
+	prepare3DViewport(m_pane->getWidth() / 2, 0, m_pane->getWidth(), m_pane->getHeight());
 	glLoadIdentity();
 
 	glColor4f(0, 0, 1, 1);
-	glTranslatef(0, 0, -5);
-	glRotatef(50.0f, 0.0f, 1.0f, 0.0f);
+	glTranslatef(m_perspective_position.x(), m_perspective_position.y(), m_perspective_position.z());
+	glRotatef(m_angles.x(), 1.0f, 0.0f, 0.0f);
+	glRotatef(m_angles.y(), 0.0f, 1.0f, 0.0f);
+	glRotatef(m_angles.z(), 0.0f, 0.0f, 1.0f);
+	glScalef(1.0f / m_scale[1], 1.0f / m_scale[1], 1.0f / m_scale[1]);
 
-	glColor4f(1, 0, 0, 1);
-	for (int i = 0; i < 6; i++)
-	{
-		glBegin(GL_LINE_STRIP);
-		glVertex3fv(&v[faces[i][0]][0]);
-		glVertex3fv(&v[faces[i][1]][0]);
-		glVertex3fv(&v[faces[i][2]][0]);
-		glVertex3fv(&v[faces[i][3]][0]);
-		glVertex3fv(&v[faces[i][0]][0]);
-		glEnd();
-	}
+	custom_render_3d();
 
 	glFlush();
-	SwapBuffers();
+	m_pane->SwapBuffers();
+}
+
+void MapGLPanePresenter::custom_render_2d()
+{
+	;
+}
+void MapGLPanePresenter::custom_render_3d()
+{
+	;
 }

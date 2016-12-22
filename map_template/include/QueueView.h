@@ -16,6 +16,7 @@ namespace newmeteo {
 		QueuePresenter *m_presenter;
 		Model *m_model;
 		MapGLPane *m_pane;
+		wxEvtHandler *m_main_app;
 	protected:
 		wxButton* m_button_apply;
 		wxButton* m_button_reject;
@@ -23,17 +24,19 @@ namespace newmeteo {
 
 	public:
 		QueueView(wxEvtHandler *handler, Model *model, wxWindow* parent = NULL, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(790, 453), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
-		~QueueView();
+		virtual ~QueueView();
 	};
 
-	class QueuePresenter : public IPresenter, public wxEvtHandler
+	class QueuePresenter : public IPresenter, public MapGLPanePresenter
 	{
 	public:
-		QueuePresenter(Model *model, QueueView *view) : m_view(view), m_model(model)
+		QueuePresenter(Model *model, QueueView *view) : MapGLPanePresenter(view->m_pane)
 		{
+			m_view = view;
+			m_model = model;
 			m_model->accept(this);
 		}
-		~QueuePresenter()
+		virtual ~QueuePresenter()
 		{
 			m_model->remove(this);
 		}

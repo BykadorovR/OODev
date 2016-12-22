@@ -34,6 +34,7 @@ bool MyApp::OnInit()
 
     
     m_DB = new MY_DB();
+	m_model = NULL;
     if (!m_DB->connect())
         return false;
 	m_model = new Model(m_DB);
@@ -48,6 +49,7 @@ bool MyApp::OnInit()
 
 void MyApp::CloseView(wxCloseEvent& event)
 {
+	m_pipeline.front()->Hide();
 	m_pipeline.front()->Destroy();
 	m_pipeline.pop();
 

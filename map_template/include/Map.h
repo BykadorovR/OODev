@@ -218,8 +218,9 @@ namespace newmeteo {
 
 
 		///@brief draw function. contains GL functionality
-		virtual void drawGL() {
-		};
+		virtual void drawGL() const {
+			;
+		}
 	protected:
 		container m_paths;
 	};
@@ -305,8 +306,9 @@ namespace newmeteo {
 		}
 
 		///@brief draw function. contains GL functionality
-		virtual void drawGL() {
-		};
+		virtual void drawGL() const {
+			;
+		}
 	private:
 		IDB *m_DB;
 		const Reconnaissance *m_rec;

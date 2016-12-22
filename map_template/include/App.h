@@ -272,7 +272,8 @@ namespace newmeteo {
         virtual ~MyApp()
         {
             delete m_DB;
-            delete m_model;
+			if(m_model)
+				delete m_model;
         }
         virtual bool OnInit();
 
