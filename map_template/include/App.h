@@ -75,14 +75,14 @@ namespace newmeteo {
                                 std::string t_comment = getFieldValue(0, "comment");
                                 std::vector<bezier_line*> t_lines;
 
-                                if (exec("select * from lines where pathid = '" + ids[pathid] + "'"))
+                                if (exec("select * from blines where pathid = '" + ids[pathid] + "'"))
                                 {
                                     if (storeResult())
                                     {
                                         int numlines = getRowCount();
                                         for (int lineid = 0; lineid < numlines; lineid++)
                                         {
-                                            Vector2f t_dots[4];
+                                            Vector2f* t_dots = new Vector2f[4];
                                             t_dots[0] = Vector2f(stof(getFieldValue(lineid, "spx")), stof(getFieldValue(lineid, "spy")));
                                             t_dots[1] = Vector2f(stof(getFieldValue(lineid, "d1x")), stof(getFieldValue(lineid, "d1y")));
                                             t_dots[2] = Vector2f(stof(getFieldValue(lineid, "d2x")), stof(getFieldValue(lineid, "d2y")));
@@ -99,6 +99,55 @@ namespace newmeteo {
                 }
             }
             return true;
+        }
+
+        virtual bool add_path(const bezier_path* path)
+        {
+            bool sts = true;
+            std::string t_depth = std::to_string(path->get_depth());
+            sts = exec("insert into paths values(null, " + t_depth + ", '" + path->get_comment() + "')");
+            if (sts)
+            {
+                sts = exec("select LAST_INSERT_ID()");
+            }
+            if (sts)
+            {
+                sts = storeResult();
+            }
+            if (sts)
+            {
+                if (getRowCount())
+                {
+                    std::string t_id = getFieldValue(0, "LAST_INSERT_ID()");
+                    const std::vector<bezier_line*> t_lines = path->get_lines();
+                    for (int line = 0; line < t_lines.size(); line++)
+                    {
+                        sts = exec("insert into blines values (null, " +
+                                    std::to_string(t_lines[line]->get()[0].x()) + ", " +
+                                    std::to_string(t_lines[line]->get()[0].y()) + ", " +
+                                    std::to_string(t_lines[line]->get()[1].x()) + ", " +
+                                    std::to_string(t_lines[line]->get()[1].y()) + ", " +
+                                    std::to_string(t_lines[line]->get()[2].x()) + ", " +
+                                    std::to_string(t_lines[line]->get()[2].y()) + ", " +
+                                    std::to_string(t_lines[line]->get()[3].x()) + ", " +
+                                    std::to_string(t_lines[line]->get()[3].y()) + ", " +
+                                    t_id + ")");
+                    }
+                }
+            }
+            return sts;
+        }
+
+        virtual bool remove_path(int id)
+        {
+            bool sts = true;
+            std::string t_id = std::to_string(id);
+            sts = exec("delete from blines where pathid = " + t_id);
+            if (sts)
+            {
+                sts = exec("delete from paths where pathid = " + t_id);
+            }
+            return sts;
         }
 
     public:

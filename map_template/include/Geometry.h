@@ -30,7 +30,7 @@ namespace newmeteo {
 	class bezier_path : public IDrawable
 	{
 	public:
-		bezier_path(const std::vector<bezier_line*> &lines, int id = 0, int depth = 0, std::string comment = "") : m_lines(lines),
+		bezier_path(const std::vector<bezier_line*> &lines, int id = 0, int depth = 0, std::string comment = "none") : m_lines(lines),
             m_id(id),
             m_depth(depth),
             m_comment(comment)
@@ -61,6 +61,21 @@ namespace newmeteo {
         const int get_id() const
         {
             return m_id;
+        }
+
+        const int get_depth() const
+        {
+            return m_depth;
+        }
+
+        const std::string get_comment() const
+        {
+            return m_comment;
+        }
+
+        void set_id(int id)
+        {
+            m_id = id;
         }
 
 	private:
