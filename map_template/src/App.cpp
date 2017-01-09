@@ -25,12 +25,7 @@ bool MyApp::OnInit()
 {
     IDB* db = new MY_DB();
     db->connect();
-    SharedMap* sm = new SharedMap(db);
-    bezier_path* path = new bezier_path(fill_path(3, 0, 0));
-    sm->add_path(path);
-    auto before = sm->get_paths();
-    sm->add_path(path);
-    auto after = sm->get_paths();
+ 
 
     
     m_DB = new MY_DB();
