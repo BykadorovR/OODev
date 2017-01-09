@@ -26,6 +26,8 @@ namespace newmeteo {
     public:
         ///@brief draw function. contains GL functionality
         virtual void drawGL() const = 0;
+		///@brief draw function. contains GL functionality
+		virtual void draw3DGL() const = 0;
     };
 }
 #endif

@@ -78,12 +78,9 @@ void MainPresenter::custom_render_2d()
 {
 	const IMap::container &c =  m_model->get_paths();
 
-
-	glColor3f(0.0f, 1.0f, 0.0f);
-
-
 	for (IMap::iterator it = c.begin(), end = c.end(); it != end; ++it)
 	{
+		glColor3f(0.0f, 1.0f, 0.0f);
 		(*it)->drawGL();
 	}
 
@@ -108,6 +105,14 @@ void MainPresenter::custom_render_3d()
 		(*it)->drawGL();
 	}
 
+	const std::vector<Surface*> &s = m_model->get_surfaces();
+
+	for (int i = 0; i < s.size(); ++i)
+	{
+		glColor3f(1.0f, 0.0f, 0.0f);
+		s[i]->draw3DGL();
+	}
+
 	glBegin(GL_LINES);
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
@@ -120,6 +125,19 @@ void MainPresenter::custom_render_3d()
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glVertex3f(0.0f, 0.0f, 0.0f);
 	glVertex3f(0.0f, 0.0f, 1000.0f);
+	glEnd();
+
+
+	glBegin(GL_TRIANGLES);
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 1000.0f, 0.0f);
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 1000.0f);
+
 	glEnd();
 }
 

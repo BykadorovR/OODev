@@ -116,9 +116,12 @@ void MapGLPanePresenter::resized(wxSizeEvent& evt)
 /** Inits the OpenGL viewport for drawing in 3D. */
 void MapGLPanePresenter::prepare3DViewport(int topleft_x, int topleft_y, int bottomrigth_x, int bottomrigth_y)
 {
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black Background
-	glClearDepth(1.0f);	// Depth Buffer Setup
+	//glClearDepth(1.0f);	// Depth Buffer Setup
 	glEnable(GL_DEPTH_TEST); // Enables Depth Testing
 	glEnable(GL_MAP1_VERTEX_3);
 	glDepthFunc(GL_LEQUAL); // The Type Of Depth Testing To Do
@@ -147,6 +150,7 @@ void MapGLPanePresenter::prepare2DViewport(int topleft_x, int topleft_y, int bot
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_MAP1_VERTEX_3);
 	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glViewport(topleft_x, topleft_y, bottomrigth_x - topleft_x, bottomrigth_y - topleft_y);
@@ -199,13 +203,29 @@ void MapGLPanePresenter::render(wxPaintEvent& evt)
 	prepare3DViewport(m_pane->getWidth() / 2, 0, m_pane->getWidth(), m_pane->getHeight());
 	glLoadIdentity();
 
-	glColor4f(0, 0, 1, 1);
+	GLfloat mat_specular[] = { 0.5, 0.5, 0.5, 0.5 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat light_position[] = { 1000.0, 1000.0, 1000.0, 1.0 };
+
+
+
 	glTranslatef(m_perspective_position.x(), m_perspective_position.y(), m_perspective_position.z());
 	glRotatef(m_angles.x(), 1.0f, 0.0f, 0.0f);
 	glRotatef(m_angles.y(), 0.0f, 1.0f, 0.0f);
 	glRotatef(m_angles.z(), 0.0f, 0.0f, 1.0f);
 	glScalef(1.0f / m_scale[1], 1.0f / m_scale[1], 1.0f / m_scale[1]);
 
+	glColor4f(0, 0, 1, 1);
+	glDisable(GL_LIGHTING);
+	glPointSize(15.0f);
+	glBegin(GL_POINTS);
+	glVertex4f(light_position[0], light_position[1], light_position[2], light_position[3]);
+	glEnd();
+	glEnable(GL_LIGHTING);
+
+	//glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	//glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 	custom_render_3d();
 
 	glFlush();

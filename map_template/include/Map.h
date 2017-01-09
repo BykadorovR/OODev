@@ -12,6 +12,79 @@
 #endif
 
 namespace newmeteo {
+
+	class tree
+	{
+	public:
+		void build(const IMap::container &paths, IMap::iterator start, int start_is_used, std::vector<tree*> &map)
+		{
+			if (start_is_used == -1)
+			{
+				//head
+				m_path = NULL;
+				++start_is_used;
+
+				for(IMap::iterator i = start, end = paths.end(); i != end; ++i, ++start_is_used)
+				{
+					if (map[start_is_used])
+						continue;
+
+					tree * new_tree = new tree();
+					new_tree->m_parent = this;
+					map[start_is_used] = new_tree;
+					new_tree->build(paths, i, start_is_used, map);
+					m_subtree.push_back(new_tree);
+				}
+			}
+			else
+			{
+				m_path = (*start);
+
+				++start_is_used;
+				++start;
+				for (IMap::iterator i = start, end = paths.end(); i != end; ++i, ++start_is_used)
+				{
+					if (!this->m_path->is_intersects((*i)))
+						continue;
+
+					if (this->m_path->get_depth() == (*i)->get_depth())
+						continue;
+
+					if (map[start_is_used])
+					{
+						if (m_subtree.size() == 0)
+						{
+							//add to subtree
+							m_subtree.push_back(map[start_is_used]);
+						}
+					}
+					else
+					{
+						tree * new_tree = new tree();
+						new_tree->m_parent = this;
+						map[start_is_used] = new_tree;
+						new_tree->build(paths, i, start_is_used, map);
+						m_subtree.push_back(new_tree);
+					}
+				}
+			}
+		}
+		~tree()
+		{
+			for (int i = 0; i < m_subtree.size(); ++i)
+			{
+				if(m_subtree[i]->m_parent == this)
+					delete m_subtree[i];
+			}
+		}
+	public:
+		//NULL if it head of the three
+		const bezier_path *m_path;
+		tree *m_parent;
+		std::vector<tree*> m_subtree;
+	};
+
+
 	class Reconnaissance
 	{
 	public:
@@ -178,12 +251,16 @@ namespace newmeteo {
 		{
 			for (iterator it = m_paths.begin(); it != m_paths.end(); ++it)
 				delete *it;
+
+			clear_surface();
 		}
 		///@brief add new path
 		///@param path is bezier path
 		virtual void add_path(const bezier_path *path)
 		{
 			m_paths.push_back(path);
+
+			build_surface();
 		}
 
 		///@brief remove path
@@ -211,6 +288,13 @@ namespace newmeteo {
 
 		///@brief get all bezier paths
 		///@return const reference to vector of const bezier paths
+		virtual const std::vector<Surface*> &get_surfaces() const
+		{
+			return m_surfaces;
+		}
+
+		///@brief get all bezier paths
+		///@return const reference to vector of const bezier paths
 		virtual const container &get_paths() const
 		{
 			return m_paths;
@@ -221,8 +305,58 @@ namespace newmeteo {
 		virtual void drawGL() const {
 			;
 		}
+
+		///@brief draw function. contains GL functionality
+		virtual void draw3DGL() const {
+			;
+		}
+	protected:
+		void build_surface()
+		{
+			clear_surface();
+
+			m_paths.sort(&less);
+			std::vector<tree*> tree_map;
+
+			tree_map.resize(m_paths.size(), NULL);
+
+			//resize after sort
+			for (IMap::iterator it = m_paths.begin(), end = m_paths.end(); it != end; ++it)
+				m_nomals_map[(*it)] = std::vector<Vector3f>((*it)->get_polygon().size(), Vector3f(0.0f, 0.0f, 0.0f));
+
+			tree *head_tree = new tree();
+			head_tree->build(m_paths, m_paths.begin(), -1, tree_map);
+
+			for(int i =0; i < head_tree->m_subtree.size(); ++i)
+				add_surface(head_tree->m_subtree[i]);
+
+			delete head_tree;
+		}
+
+		void add_surface(const tree *tree)
+		{
+			for (int i = 0; i < tree->m_subtree.size(); ++i)
+			{
+				m_surfaces.push_back(new Surface(tree->m_path->get_polygon(), m_nomals_map[tree->m_path], tree->m_path->get_depth(),
+					tree->m_subtree[i]->m_path->get_polygon(), m_nomals_map[tree->m_subtree[i]->m_path], tree->m_subtree[i]->m_path->get_depth()));
+				if (tree->m_subtree[i]->m_parent == tree)
+					add_surface(tree->m_subtree[i]);
+			}
+
+		}
+
+		void clear_surface()
+		{
+			for (int i = 0; i < m_surfaces.size(); ++i)
+				delete m_surfaces[i];
+			m_surfaces.resize(0);
+		}
+
 	protected:
 		container m_paths;
+		std::vector<Surface*> m_surfaces;
+
+		std::map<const bezier_path*, std::vector<Vector3f> >m_nomals_map;
 	};
 
 
@@ -315,7 +449,9 @@ namespace newmeteo {
 	private:
         virtual bool update()
         {
-            return m_DB->get_paths(m_paths);
+			bool result = m_DB->get_paths(m_paths);
+			this->build_surface();
+            return result;
         }
         //!TODO: add decomposition methods(from IDB request to normal representation)
 		//!TODO: add local changes!!! should be drawn differently
